@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="fragments/head :: head">
+</head>
+<body>
+    <div th:replace="fragments/header :: header"></div>
+
+    <div class="row mt-4" th:if="${error}">
+        <div class="text-center">
+            <p data-th-text="${error}" class="h4"></p>
+            <p data-th-text="${message}"></p>
+        </div>
+    </div>
+
+    <div class="row mt-4 justify-content-center">
+        <div class="col-4 text-center">
+            <h3>Register Account</h3>
+            <form action="/user/register" method="POST">
+                <table class="mt-4 text-start">
+                    <tr>
+                        <td><label for="username" class="m-3">Username:</label></td>
+                        <td><input type="text" class="form_control m-2" name="username"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="email" class="m-3">Email: </label></td>
+                        <td><input type="text" class="form_control m-2" name="email"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="password" class="m-3">Password: </label></td>
+                        <td><input type="password" class="form_control m-2" name="password"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="verify_password" class="m-3">Verify Password: </label></td>
+                        <td><input type="password" class="form_control m-2" name="verify_password"></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <button class="btn btn-primary m-3" type="submit">Register</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
