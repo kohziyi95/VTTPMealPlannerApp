@@ -37,7 +37,7 @@ public class RecipeService {
     private String edamamKey;
 
     private final String EDAMAM = "https://api.edamam.com/api/recipes/v2";
-    private final String MEALDB = "https://www.themealdb.com/api/json/v1/1/";
+    // private final String MEALDB = "https://www.themealdb.com/api/json/v1/1/";
 
 
     public List<Recipe> searchRecipes(String query, String cuisineType, String mealType){

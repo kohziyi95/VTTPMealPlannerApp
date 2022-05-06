@@ -26,11 +26,6 @@ public class LoginController {
     @Autowired
     private LoginRepository repo;
 
-    @GetMapping("/")
-    public String showLoginPage(){
-        return null;
-    }
-
     @GetMapping("/login")
     public String getLogin(){
         return "loginUser";
@@ -59,6 +54,8 @@ public class LoginController {
             return mvc;    
         }
         mvc.setViewName("loginStatus");
+        mvc.addObject("username", "Welcome " + username + "!");
+        mvc.addObject("message", "Log In Successful! Redirecting in ...");
         sess.setAttribute("username", username);
         return mvc;
     }
@@ -99,7 +96,6 @@ public class LoginController {
             return mvc;    
         }
         mvc.setViewName("registerStatus");
-        mvc.addObject("username", "Welcome " + username + "!");
         mvc.addObject("message", "You have successfully registered. Please log in to continue.");
         return mvc;
     }

@@ -5,9 +5,21 @@
 <body>
     <div th:replace="fragments/header :: header"></div>
 
-    <div class="container mt-5">
-        <p data-th-text="${username}" class="h4"></p>
-        <p data-th-text="${message}"></p>
+    <div class="row mt-4">
+        <div class="col text-center">
+            <p class="h4 mb-3">Welcome!</p>
+            <p data-th-text="${message}"></p>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col">
+            <form action="/user/login" method="GET">
+                <div class="m-3 text-center">
+                    <button class="btn btn-primary" type="submit">Click Here to Login</button>
+                </div>
+            </form>
+        </div>
+        
     </div>
 </body>
 </html>
