@@ -50,8 +50,8 @@ jobs:
     - name: Upload coverage report to DigitalOcean spaces
       uses: BetaHuhn/do-spaces-action@v2
       with:
-        access_key: ${{ secrets.access_key }}
-        secret_key: ${{ secrets.secret_key }}
+        access_key: ${{ secrets.bucket_access_key }}
+        secret_key: ${{ secrets.bucket_secret_key }}
         space_name: verybigbucket
         space_region: sgp1
         source: target/site/jacoco
