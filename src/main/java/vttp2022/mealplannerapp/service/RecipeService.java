@@ -37,8 +37,6 @@ public class RecipeService {
     private String edamamKey;
 
     private final String EDAMAM = "https://api.edamam.com/api/recipes/v2";
-    // private final String MEALDB = "https://www.themealdb.com/api/json/v1/1/";
-
 
     public List<Recipe> searchRecipes(String query, String cuisineType, String mealType){
         List<Recipe> result = new LinkedList<>();
@@ -49,16 +47,16 @@ public class RecipeService {
                 .queryParam("q", query)
                 .queryParam("imageSize", "REGULAR");
         
-        if (cuisineType!=null) {
+        if (cuisineType!="") {
             uri = uri.queryParam("cuisineType", cuisineType);
         }
 
-        if (mealType!=null) {
+        if (mealType!="") {
             uri = uri.queryParam("mealType", mealType);
         }
                 
         String url = uri.toUriString();
-        // logger.log(Level.INFO,url);
+        logger.log(Level.INFO,url);
         
         RequestEntity<Void> req = RequestEntity
         .get(url)

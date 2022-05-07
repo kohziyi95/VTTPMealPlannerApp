@@ -25,6 +25,5 @@ create table recipes(
     recipe_name varchar(64) not null,
     user_id varchar(8) not null,
     primary key(id)
-
 );
 

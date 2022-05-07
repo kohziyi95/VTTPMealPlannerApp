@@ -73,6 +73,7 @@ public class Recipe implements Serializable {
         
         recipe.setRecipeName(object.getString("label"));
         recipe.setIngredients(ingredientList);
+        recipe.setImgUrl(object.getJsonObject("images").getJsonObject("REGULAR").getString("url"));
         recipe.setCuisineType(cuisineType);
         recipe.setMealType(mealType);
         return recipe;

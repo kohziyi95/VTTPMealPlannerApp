@@ -1,0 +1,33 @@
+#pageTitle {
+    font-family: 'Parisienne', cursive;
+    font-size: 3.5rem;
+    text-align: center;
+
+}
+
+#pageSubtitle {
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+
+.font-parisienne {
+    font-family: 'Parisienne', cursive;
+}
+
+body {
+    font-family: 'Goudy Bookletter 1911', serif;
+    background-color: rgb(253, 237, 194);
+}
+
+.navbar-custom{
+    background-color: rgb(253, 168, 65);
+}
+
+a {
+   color: black !important;
+}
+
+a:hover {
+    color: rgb(255, 255, 255) !important;
+ }
