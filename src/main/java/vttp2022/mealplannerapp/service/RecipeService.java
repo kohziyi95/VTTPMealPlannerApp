@@ -80,16 +80,18 @@ public class RecipeService {
         return result;
     }
 
-    public void saveRecipe(Recipe recipe, String userId){
+    public boolean saveRecipe(Recipe recipe, String userId){
         try {
             recipeRepo.sqlInsertRecipes(recipe, userId);
         } catch (Exception e) {
             logger.log(Level.INFO, "Recipe has already been saved.");
+            return false;
         }
         
         int recipeId = recipeRepo.sqlGetRecipeId(recipe, userId);
         recipe.setId(recipeId);
         recipeRepo.redisPutRecipe(recipe, userId);
+        return true;
     }
 
 }
