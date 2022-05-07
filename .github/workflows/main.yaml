@@ -6,7 +6,7 @@ env:
   EDAMAM_API_ID: ${{ secrets.edamam_api_id }}
   SPRING_DATASOURCE_URL: ${{ secrets.spring_datasource_url }}
   SPRING_DATASOURCE_USERNAME: ${{ secrets.spring_datasource_username }}
-  SPRING_DATASOURCE_PASSWORD: ${{ secrets.spring_datasource_url }}
+  SPRING_DATASOURCE_PASSWORD: ${{ secrets.spring_datasource_password }}
   SPRING_REDIS_HOST: ${{ secrets.spring_redis_host }}
   SPRING_REDIS_PORT: ${{ secrets.spring_redis_port }}
   SPRING_REDIS_PASSWORD: ${{ secrets.spring_redis_password }}
