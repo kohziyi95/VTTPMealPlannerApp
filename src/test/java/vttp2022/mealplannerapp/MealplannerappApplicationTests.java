@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import vttp2022.mealplannerapp.model.Recipe;
 import vttp2022.mealplannerapp.repository.RecipeRepository;
@@ -29,7 +30,10 @@ class MealplannerappApplicationTests {
 	private LoginService loginSvc;
 
 	@Autowired
-    RedisTemplate<String,Object> redisTemplate;
+    private RedisTemplate<String,Object> redisTemplate;
+
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 
 
 	@Test
@@ -40,8 +44,13 @@ class MealplannerappApplicationTests {
 
 	@Test
 	void saveRecipeShouldReturnTrue(){
+		if (jdbcTemplate.queryForObject("select count(*) from recipes where recipe_name = 'TEST RECIPE'",Integer.class) > 0){
+			int added = jdbcTemplate.update("delete from recipes where recipe_name = 'TEST RECIPE'");
+		};
+			
+
 		Recipe recipe = new Recipe();
-		recipe.setRecipeName("Chicken Noodle & Pea Soup");
+		recipe.setRecipeName("TEST RECIPE");
 		List<String> mealType = new ArrayList<>();
 		mealType.add("lunch/dinner");
 		recipe.setMealType(mealType);
@@ -51,20 +60,25 @@ class MealplannerappApplicationTests {
 		List<String> ingredientList = new ArrayList<>();
 		ingredientList.add("apple");
 		recipe.setIngredients(ingredientList);
-		recipeSvc.saveRecipe(recipe, "12345678");
-		String result = recipeRepo.redisGetRecipe("12345678", recipe.getId()).get().getRecipeName();
+		recipeSvc.saveRecipe(recipe, "test0001");
+		String result = recipeRepo.redisGetRecipe("test0001", recipe.getId()).get().getRecipeName();
 				
-		assertEquals("Chicken Noodle & Pea Soup", result);
+		assertEquals("TEST RECIPE", result);
 	}
 
 	@Test
 	void createUserShouldReturnTrue(){
+		if (jdbcTemplate.queryForObject("select count(*) from user where username = 'test1'",Integer.class) > 0){
+			int updated = jdbcTemplate.update("delete from user where username = 'test1'");
+		};
 		boolean added = false;
 		try {
-			added = loginSvc.createUser("user1", "123456", "test@test.com");
+			added = loginSvc.createUser("test1", "12345678", "test@test.com");
 		} catch (Exception e) {
-			System.out.print(e.getMessage());
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+
 		assertTrue(added);
 	}
 

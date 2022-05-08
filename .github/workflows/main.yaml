@@ -1,4 +1,4 @@
-name: Compile, test, deploy
+name: Compile, Test
 
 on: [ "push" ]
 env: 
