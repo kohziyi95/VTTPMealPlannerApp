@@ -2,4 +2,4 @@
 
 <!-- ![Coverage](https://verybigbucket.sgp1.digitaloceanspaces.com/coverage/VTTPMealPlannerApp/jacoco.svg) -->
 
-![Coverage](.github/badges/jacoco.svg)
+[![Coverage](.github/badges/jacoco.svg)](https://github.com/kohziyi95/VTTPMealPlannerApp/actions/workflows/main.yaml)
