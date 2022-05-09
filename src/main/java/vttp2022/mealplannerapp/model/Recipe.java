@@ -10,14 +10,14 @@ public class Recipe implements Serializable {
     private int id;
     private String recipeName;
     private String imgUrl;
-    private List<String> ingredients;
+    private List<String> ingredientLines;
     private List<String> cuisineType;
     private List<String> mealType;
+    private List<Ingredient> ingredientList;
 
     public int getId() {
         return id;
     }
-    
     public void setId(int id) {
         this.id = id;
     }
@@ -33,11 +33,11 @@ public class Recipe implements Serializable {
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
     }
-    public List<String> getIngredients() {
-        return ingredients;
+    public List<String> getIngredientLines() {
+        return ingredientLines;
     }
-    public void setIngredients(List<String> ingredients) {
-        this.ingredients = ingredients;
+    public void setIngredientLines(List<String> ingredientLines) {
+        this.ingredientLines = ingredientLines;
     }
 
     public List<String> getCuisineType() {
@@ -56,9 +56,17 @@ public class Recipe implements Serializable {
         this.mealType = mealType;
     }
 
+    public List<Ingredient> getIngredientList() {
+        return ingredientList;
+    }
+
+    public void setIngredientList(List<Ingredient> ingredientList) {
+        this.ingredientList = ingredientList;
+    }
+
     public static Recipe createRecipe(JsonObject object){
         Recipe recipe = new Recipe();
-        List<String> ingredientList = object.getJsonArray("ingredientLines")
+        List<String> ingredientLines = object.getJsonArray("ingredientLines")
                 .stream()
                 .map(ingredient -> ingredient.toString())
                 .collect(Collectors.toList());
@@ -70,12 +78,15 @@ public class Recipe implements Serializable {
                 .stream()
                 .map(meal -> meal.toString())
                 .collect(Collectors.toList());
+        List<Ingredient> ingredientList = Ingredient.getList(object.getJsonArray("ingredients"));
         
         recipe.setRecipeName(object.getString("label"));
-        recipe.setIngredients(ingredientList);
+        recipe.setIngredientLines(ingredientLines);
         recipe.setImgUrl(object.getJsonObject("images").getJsonObject("REGULAR").getString("url"));
         recipe.setCuisineType(cuisineType);
         recipe.setMealType(mealType);
+        recipe.setIngredientList(ingredientList);
+
         return recipe;
     }
 

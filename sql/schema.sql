@@ -12,11 +12,13 @@ create table user(
     primary key(user_id)
 );
 
-create table shopping_list(
-    id int not null auto_increment,
+create table ingredient_list(
+    id varchar(64) not null unique,
     user_id varchar(8) not null,
     item_name varchar(64) not null,
-    quantity varchar(64),
+    quantity float not null,
+    measure varchar(32) not null,
+    img_url varchar(128) not null,
     primary key(id)
 );
 

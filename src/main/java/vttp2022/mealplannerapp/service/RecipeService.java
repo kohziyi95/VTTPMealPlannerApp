@@ -74,8 +74,9 @@ public class RecipeService {
             JsonObject obj = (JsonObject) array.get(i);
             JsonObject recipeData = obj.getJsonObject("recipe");
             result.add(Recipe.createRecipe(recipeData));
-            logger.log(Level.INFO, (i+1) + " >>>>>> " + result.get(i).getRecipeName() );
-            
+            logger.log(Level.INFO, (i+1) + " >>>>>> " + result.get(i).getRecipeName());
+            // logger.log(Level.INFO, (i+1) + " ingredientLines  >>>>>> " + result.get(i).getIngredientLines());
+
         }
         return result;
     }

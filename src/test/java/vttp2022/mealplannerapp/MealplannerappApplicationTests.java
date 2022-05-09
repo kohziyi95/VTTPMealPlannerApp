@@ -48,7 +48,6 @@ class MealplannerappApplicationTests {
 			int added = jdbcTemplate.update("delete from recipes where recipe_name = 'TEST RECIPE'");
 		};
 			
-
 		Recipe recipe = new Recipe();
 		recipe.setRecipeName("TEST RECIPE");
 		List<String> mealType = new ArrayList<>();
@@ -59,7 +58,7 @@ class MealplannerappApplicationTests {
 		recipe.setCuisineType(cuisineType);
 		List<String> ingredientList = new ArrayList<>();
 		ingredientList.add("apple");
-		recipe.setIngredients(ingredientList);
+		recipe.setIngredientLines(ingredientList);
 		recipeSvc.saveRecipe(recipe, "test0001");
 		String result = recipeRepo.redisGetRecipe("test0001", recipe.getId()).get().getRecipeName();
 				
@@ -75,10 +74,8 @@ class MealplannerappApplicationTests {
 		try {
 			added = loginSvc.createUser("test1", "12345678", "test@test.com");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		assertTrue(added);
 	}
 
