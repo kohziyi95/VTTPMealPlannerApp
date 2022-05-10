@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://wwww.thymeleaf.org">
+<head th:replace="fragments/head :: head">
+</head>
+<body>
+    <div th:replace="fragments/header :: header"></div>
+
+    <div class="text-center mt-3"><img class="w-25 opacity-50" src="/images/swirldivider.png"></div>
+
+    <div class="display-3 m-3 text-center text-danger text-capitalize recipeName" th:text="${recipe.recipeName}"></div>
+
+    <div class="h5 m-3 row">
+        <div class="col-sm-2"></div>
+        <div class="col-md-4 col-sm-8 col-xs-auto mb-3">
+            <img th:src="${recipe.imgUrl}" alt="${recipe.recipeName}">
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <div>Ingredients Required: </div>
+            <div th:each="line : ${recipe.ingredientLines}">
+                <div th:text="${line}"></div>
+            </div>
+
+            <!-- <div class="mt-3">
+                <div class="" th:each="cuisine : ${recipe.cuisineType}">Cuisine: <span class="text-capitalize" th:text="${cuisine}"></span></div>
+                <div class="" th:each="meal : ${recipe.mealType}">Meal: <span class="text-capitalize" th:text="${meal}"></span></div>
+            </div> -->
+        </div>
+        <div class="row mt-4">
+            <div class="col text-center" th:if="${user}">
+                <form action="/recipe/search/details" method="POST">
+                    <button class="btn btn-danger" type="submit" name="saveRecipe" value=true>Save Recipe</button>
+                    <button class="btn btn-danger" type="submit" name="saveIngredients" value=true>Save Ingredients</button>
+                    <input type="hidden" name="recipeIndex" th:value="${recipeIndex}">
+                </form>
+                
+            </div>
+            <div class="col text-center" th:unless="${user}">
+                Sign in to save recipes and ingredients to your account!
+                <br>
+                <a href="/user/login" class="btn btn-danger mt-3 text-light">Click Here to Login!</a>
+            </div>
+        </div>
+    
+    </div>
+    
+    <hr class="w-75 m-auto mt-4 mb-3">
+    
+
+</body>
+</html>

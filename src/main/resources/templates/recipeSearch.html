@@ -5,12 +5,34 @@
 <body>
     <div th:replace="fragments/header :: header"></div>
 
-    <div class="ps-5 pe-5" th:each="recipe: ${recipeList}">
-        <div class="mt-4">
-            <div class="h4 text-capitalize" th:text="${recipe.recipeName}"></div>
-            <img th:src="${recipe.imgUrl}">
-        </div>
-        
+    <div class="h3 m-3 text-center">Showing results for <span class="text-danger text-capitalize" th:text="${query}"></span>:</div>
+    <div class="text-center">
+        <span class="h5 m-3" th:unless="${cuisineType} == ''">Cuisine: <span th:text="${cuisineType}"></span></span>
+        <span class="h5 m-3" th:unless="${mealType} ==''">Meal: <span class="text-capitalize" th:text="${mealType}"></span></span>
     </div>
+    <div class="h5 m-3 text-center">Click on the images for detailed recipes and ingredients!</div>
+    
+    <hr class="w-75 m-auto mt-4 mb-3">
+    
+    <div class="d-flex flex-wrap">
+        <div class="m-3" th:each="recipe: ${recipeList}">
+            <div class="h5 text-capitalize" th:text="${recipe.recipeName}"></div>
+            <form action="/recipe/search/details" method="GET">
+                <input type="hidden" name="recipeIndex" th:value="${recipeStat.index}">
+                <input type="image" th:src="${recipe.imgUrl}">
+            </form>
+        </div>      
+    </div>
+
+    <div class="text-end m-3" th:unless="${lastPage}">
+        <form action="/recipe/search" method="POST">
+            <input type="hidden" name="query" th:value="${query}">
+            <input type="hidden" name="cuisineType" th:value="${cuisineType}">
+            <input type="hidden" name="mealType" th:value="${mealType}">
+            <!-- <button type="submit" name="prevPage" value=true class="btn btn-danger">Previous Page</button> -->
+            <button type="submit" name="nextPage" value=true class="btn btn-danger">Next Page</button>
+        </form>
+    </div>
+
 </body>
 </html>

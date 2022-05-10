@@ -29,8 +29,8 @@ class MealplannerappApplicationTests {
 	@Autowired
 	private LoginService loginSvc;
 
-	@Autowired
-    private RedisTemplate<String,Object> redisTemplate;
+	// @Autowired
+    // private RedisTemplate<String,Object> redisTemplate;
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -39,6 +39,13 @@ class MealplannerappApplicationTests {
 	@Test
 	void recipeListCountShouldAssertEquals20(){
 		List<Recipe> recipeList= recipeSvc.searchRecipes("chicken", "asian", "dinner");
+		assertEquals(20, recipeList.size());
+	}
+
+	@Test
+	void nextPageRecipeListCountShouldAssertEquals20(){
+		String nextPage = recipeSvc.getNextPage(recipeSvc.getUrlStringByQuery("chicken", "asian", "dinner"));
+		List<Recipe> recipeList= recipeSvc.searchRecipes(nextPage);
 		assertEquals(20, recipeList.size());
 	}
 

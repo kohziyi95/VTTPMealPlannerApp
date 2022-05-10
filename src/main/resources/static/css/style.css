@@ -31,3 +31,7 @@ a {
 a:hover {
     color: rgb(255, 255, 255) !important;
  }
+
+ .recipeName {
+    font-family: 'Parisienne', cursive;
+ }
