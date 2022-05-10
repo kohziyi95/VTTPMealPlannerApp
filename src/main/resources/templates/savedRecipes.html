@@ -5,8 +5,41 @@
 <body>
     <div th:replace="fragments/header :: header"></div>
 
-    <div class="text-center mt-3"><img class="w-25 opacity-50" src="/images/swirldivider.png"></div>
+    <!-- <div class="text-center mt-3"><img class="w-25 opacity-50" src="/images/swirldivider.png"></div> -->
+    <div class="display-4 text-center mt-5 recipeName" th:unless="${savedRecipes}">No Recipes Saved</div>
+    <div class="display-4 text-center mt-5 recipeName" th:if="${savedRecipes}">My Favourite Recipes</div>
 
+    <div class="card m-5" th:each="recipe : ${savedRecipes}">
+        <div class="row m-3 p-3 justify-content-center" >
+       
+            <div class="col-6 col-sm-auto">
+                <div class="display-5 text-danger text-capitalize recipeName">
+                    <span th:text="${recipeStat.index + 1} + ."></span>
+                    <span th:text="${recipe.recipeName}"></span>
+          
+                </div>
+                <div th:each="cuisine : ${recipe.cuisineType}"><strong>Cuisine:</strong> <span class="text-capitalize" th:text="${cuisine}"></span></div>
+                <div th:each="meal : ${recipe.mealType}"><strong>Meal:</strong> <span class="text-capitalize" th:text="${meal}"></span></div>
+                <div>
+                    <div><strong>Ingredients Required:</strong></div>
+                    <div th:each="line : ${recipe.ingredientLines}">
+                        <div th:text="${line}"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1"></div>
+            <div class="col-4 col-sm-auto mt-sm-3">
+                <div class="m-auto"><img th:src="${recipe.imgUrl}"></div>
+                
+            </div>
+        </div>
+    </div>
+   
+
+
+
+
+<!-- 
     <div class="display-3 m-3 text-center text-danger text-capitalize recipeName" th:text="${recipe.recipeName}"></div>
 
     <div class="h5 m-3 row">
@@ -18,13 +51,13 @@
             <div>Ingredients Required: </div>
             <div th:each="line : ${recipe.ingredientLines}">
                 <div th:text="${line}"></div>
-            </div>
+            </div> -->
 
             <!-- <div class="mt-3">
                 <div class="" th:each="cuisine : ${recipe.cuisineType}">Cuisine: <span class="text-capitalize" th:text="${cuisine}"></span></div>
                 <div class="" th:each="meal : ${recipe.mealType}">Meal: <span class="text-capitalize" th:text="${meal}"></span></div>
             </div> -->
-        </div>
+        <!-- </div>
         <div class="row mt-4">
             <div class="col text-center" th:if="${user}">
                 <form action="/recipe/search/details" method="POST">
@@ -48,7 +81,7 @@
     </div>
     
     <hr class="w-75 m-auto mt-4 mb-3">
-    
+     -->
 
 </body>
 </html>

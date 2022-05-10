@@ -8,8 +8,10 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -109,20 +112,6 @@ public class RecipeService {
     //     return result;
     // }
 
-    public boolean saveRecipe(Recipe recipe, String userId){
-        try {
-            recipeRepo.sqlInsertRecipes(recipe, userId);
-        } catch (Exception e) {
-            logger.log(Level.INFO, "Recipe has already been saved.");
-            return false;
-        }
-        
-        int recipeId = recipeRepo.sqlGetRecipeId(recipe, userId);
-        recipe.setId(recipeId);
-        recipeRepo.redisPutRecipe(recipe, userId);
-        return true;
-    }
-
     public String getUrlStringByQuery(String query, String cuisineType, String mealType){
         UriComponentsBuilder uri = UriComponentsBuilder.fromUriString(EDAMAM)
                 .queryParam("type", "public")
@@ -166,6 +155,33 @@ public class RecipeService {
         logger.log(Level.INFO, "Next page url >>>>>>>>>>>>> " + nextPage);
 
         return nextPage;
+    }
+
+    @Transactional
+    public boolean saveRecipe(Recipe recipe, String userId) throws Exception{
+        try {
+            recipeRepo.sqlInsertRecipes(recipe, userId);
+        } catch (Exception e) {
+            logger.log(Level.INFO, "Recipe has already been saved.");
+            return false;
+        }
+        
+        int recipeId = recipeRepo.sqlGetRecipeId(recipe, userId);
+        recipe.setId(recipeId);
+
+        recipeRepo.redisPutRecipe(recipe, userId);
+        return true;
+    }
+
+    public List<Recipe> getSavedRecipes(String userId) throws Exception{
+        List<Recipe> recipeList = new ArrayList<>();
+        List<Integer> idList = recipeRepo.sqlGetAllRecipeId(userId);
+        for (Integer id : idList) {
+            Recipe recipe = recipeRepo.redisGetRecipe(userId, id);
+            recipeList.add(recipe);
+            logger.log(Level.INFO, "Saved Recipes >>>>>>>>>> " + recipe.getRecipeName());
+        }
+        return recipeList;
     }
 
 }

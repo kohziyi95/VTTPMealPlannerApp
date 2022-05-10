@@ -13,6 +13,7 @@ public class MainController {
     public String getIndex(HttpSession sess, Model model){
         
         model.addAttribute("user", sess.getAttribute("username"));
+        model.addAttribute("userId", sess.getAttribute("userId"));
         return "index";
     }
     

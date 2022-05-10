@@ -1,5 +1,7 @@
 package vttp2022.mealplannerapp.repository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -7,6 +9,7 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
 import vttp2022.mealplannerapp.model.Recipe;
@@ -25,8 +28,11 @@ public class RecipeRepository {
     private final String SQL_INSERT_RECIPE = 
         "insert into recipes (recipe_name, user_id) values (? , ?)";
 
-        private final String SQL_SELECT_RECIPE_ID = 
-        "select id from recipes where recipe_name = ? and user_id = ?";    
+    private final String SQL_SELECT_RECIPE_ID = 
+        "select id from recipes where recipe_name = ? and user_id = ?";
+        
+        private final String SQL_SELECT_RECIPE_BY_USER_ID = 
+        "select * from recipes where user_id = ?";   
 
 
     public boolean sqlInsertRecipes(Recipe recipe, String userId){
@@ -44,6 +50,16 @@ public class RecipeRepository {
         // return recipeId;
     }
 
+    public List<Integer> sqlGetAllRecipeId(String userId){
+        SqlRowSet rs = jdbcTemplate.queryForRowSet(SQL_SELECT_RECIPE_BY_USER_ID, userId);
+        List<Integer> idList = new ArrayList<>();
+        while (rs.next()) {
+            idList.add(rs.getInt("id"));
+            logger.log(Level.INFO, "Recipe Id >>>> " + rs.getInt("id"));
+        }
+        return idList;
+    }
+
 
     //REDIS Methods
     public void redisPutRecipe(Recipe recipe, String userId){
@@ -51,8 +67,13 @@ public class RecipeRepository {
         redisTemplate.opsForHash().put(userId + "_Map", String.valueOf(recipe.getId()), recipe);
     }
 
-    public Optional<Recipe> redisGetRecipe(String userId, int recipeId){
-        Optional<Recipe> opt = Optional.of((Recipe)redisTemplate.opsForHash().get(userId + "_Map", String.valueOf(recipeId)));
-        return opt;
+    public Recipe redisGetRecipe(String userId, int recipeId) throws Exception{
+        Recipe recipe = new Recipe();
+        try {
+            recipe = (Recipe)redisTemplate.opsForHash().get(userId + "_Map", String.valueOf(recipeId));
+        } catch (Exception e) {
+            throw new Exception("No recipes found");
+        }
+        return recipe;
     }
 }

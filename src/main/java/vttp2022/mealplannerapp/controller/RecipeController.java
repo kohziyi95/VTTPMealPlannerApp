@@ -46,7 +46,7 @@ public class RecipeController {
         if (svc.getNextPage(url) == null) {
             mvc.addObject("lastPage", true);
         }
-        
+
         recipeList = svc.searchRecipes(url);
 
         mvc.addObject("query", query);
@@ -56,6 +56,8 @@ public class RecipeController {
         mvc.setViewName("recipeSearch");
         sess.setAttribute("recipeList", recipeList);
         sess.setAttribute("currentUrl", url);
+        mvc.addObject("user", sess.getAttribute("username"));
+        mvc.addObject("userId", sess.getAttribute("userId"));
         logger.log(Level.INFO, "URL >>>> " + sess.getAttribute("currentUrl"));
         return mvc;
     }
@@ -99,6 +101,8 @@ public class RecipeController {
         mvc.addObject("recipeList", recipeList);
         mvc.setViewName("recipeSearch");
         sess.setAttribute("recipeList", recipeList);
+        mvc.addObject("user", sess.getAttribute("username"));
+        mvc.addObject("userId", sess.getAttribute("userId"));
         
         return mvc;
     }
@@ -113,18 +117,40 @@ public class RecipeController {
         mvc.addObject("recipeIndex", recipeIndex);
         mvc.addObject("recipe", recipe);
         mvc.addObject("user", sess.getAttribute("username"));
+        mvc.addObject("userId", sess.getAttribute("userId"));
+
         return mvc;
     }
 
     @PostMapping(path = "/search/details")
-    public ModelAndView postRecipeDetails (@RequestParam int recipeIndex, HttpSession sess) {
+    public ModelAndView postRecipeDetails (@RequestBody MultiValueMap<String,String> payload, HttpSession sess) {
         List<Recipe> recipeList = (List<Recipe>) sess.getAttribute("recipeList");
-        Recipe recipe = recipeList.get(recipeIndex);
-
         ModelAndView mvc = new ModelAndView("recipeDetails");
+        String userId = (String) sess.getAttribute("userId");
+
+        int recipeIndex = Integer.parseInt(payload.getFirst("recipeIndex"));
+        Recipe recipe = recipeList.get(recipeIndex);
+        boolean saveRecipe = false;
+        boolean saveIngredients = false;
+
+        if (payload.containsKey("saveRecipe")){
+            saveRecipe = Boolean.valueOf(payload.getFirst("saveRecipe"));
+            try {
+                if (svc.saveRecipe(recipe, userId)){
+                    mvc.addObject("message", "Recipe Saved.");
+                }
+            } catch (Exception e) {
+                logger.log(Level.WARNING, e.getMessage());
+                mvc.addObject("message", "Recipe has already been saved.");
+            };
+        } else if (payload.containsKey("saveIngredients")){
+            saveIngredients = Boolean.valueOf(payload.getFirst("saveIngredients"));
+        }
+
         mvc.addObject("recipeIndex", recipeIndex);
         mvc.addObject("recipe", recipe);
         mvc.addObject("user", sess.getAttribute("username"));
+        mvc.addObject("userId", sess.getAttribute("userId"));
         return mvc;
     }
 }

@@ -36,9 +36,9 @@ public class LoginController {
 
         String username = payload.getFirst("username");
         String password = payload.getFirst("password");
-
+        String userId = svc.authenticateUser(username, password);
         try {
-            if(!svc.authenticateUser(username, password)){
+            if(userId == null){
                 if(repo.getUserCountbyUsername(username) == 0)
                     throw new Exception("Username not found. Please try again.");
 
@@ -56,6 +56,7 @@ public class LoginController {
         mvc.addObject("username", "Welcome " + username + "!");
         mvc.addObject("message", "Log In Successful! Redirecting in ...");
         sess.setAttribute("username", username);
+        sess.setAttribute("userId", userId);
         return mvc;
     }
 

@@ -44,8 +44,8 @@ public class LoginService {
         return added;
     }
 
-    public boolean authenticateUser(String username, String password){
-        return 1 == repo.getUserCountbyUsernameAndPassword(username, password);
+    public String authenticateUser(String username, String password){
+        return repo.getUserIdbyUsernameAndPassword(username, password);
     }
 
 }

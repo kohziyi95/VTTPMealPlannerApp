@@ -13,14 +13,14 @@
                 <a class="nav-link active" aria-current="page" href="/user/login">Login/Register</a>
               </li>
               <li class="nav-item m-auto" th:if="${user}">
+                <a class="nav-link" th:href="@{/list/{userId}/myrecipes(userId = ${userId})}">MyRecipes</a>
+              </li>
+              <li class="nav-item m-auto" th:if="${user}">
+                <a class="nav-link" th:href="@{/list/{userId}/shoppinglist(userId = ${userId})}">Shopping List</a>
+              </li>
+              <li class="nav-item m-auto" th:if="${user}">
                 <a class="nav-link active" aria-current="page" href="/user/logout">Logout</a>
               </li>
-              <!-- <li class="nav-item">
-                <a class="nav-link" href="#">Features</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Pricing</a>
-              </li> -->
             </ul>
           </div>
         </div>

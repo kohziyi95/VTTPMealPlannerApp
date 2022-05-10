@@ -28,7 +28,7 @@ public class LoginRepository {
         "select count(*) from user where email = ?";
     
     private final static String SQL_AUTHENTICATE_USER = 
-        "select count(*) from user where username = ? and password = sha1(?)";
+        "select user_id from user where username = ? and password = sha1(?)";
 
     public boolean insertUser(User user){
         int added = template.update(SQL_INSERT_USER, 
@@ -54,10 +54,11 @@ public class LoginRepository {
         return userCount;
     }
 
-    public int getUserCountbyUsernameAndPassword(String username, String password){
-        int userCount = template.queryForObject(SQL_AUTHENTICATE_USER, Integer.class, username, password);
-        return userCount;
+    public String getUserIdbyUsernameAndPassword(String username, String password){
+        String userId = template.queryForObject(SQL_AUTHENTICATE_USER, String.class, username, password);
+        return userId;
     }
+
 
 
 } 

@@ -66,7 +66,11 @@ class MealplannerappApplicationTests {
 		List<String> ingredientList = new ArrayList<>();
 		ingredientList.add("apple");
 		recipe.setIngredientLines(ingredientList);
-		recipeSvc.saveRecipe(recipe, "test0001");
+		try {
+			recipeSvc.saveRecipe(recipe, "test0001");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		String result = recipeRepo.redisGetRecipe("test0001", recipe.getId()).get().getRecipeName();
 				
 		assertEquals("TEST RECIPE", result);

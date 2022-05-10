@@ -1,12 +1,13 @@
 package vttp2022.mealplannerapp.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 
-public class Ingredient {
+public class Ingredient implements Serializable {
     private String id;
     private String itemName;
     private Float quantity;
