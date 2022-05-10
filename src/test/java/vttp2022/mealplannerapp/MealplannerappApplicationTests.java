@@ -71,7 +71,13 @@ class MealplannerappApplicationTests {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		String result = recipeRepo.redisGetRecipe("test0001", recipe.getId()).get().getRecipeName();
+		String result = null;
+		
+		try {
+			result = recipeRepo.redisGetRecipe("test0001", recipe.getId()).getRecipeName();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 				
 		assertEquals("TEST RECIPE", result);
 	}
