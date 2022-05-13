@@ -1,0 +1,31 @@
+name: Deploy to Heroku
+on:
+  push:
+    tags:
+      - 'v*'
+jobs:
+  deploy_to_heroku:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout src
+        uses: actions/checkout@v2
+      - name: Deploy
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ secrets.heroku_api_key }}
+          heroku_app_name: "vttpmealplanner"
+          heroku_email: ${{ secrets.email }}
+          branch: ${{ github.ref_name }}
+        env:
+          EDAMAM_API_KEY: ${{ secrets.edamam_api_key }}
+          EDAMAM_API_ID: ${{ secrets.edamam_api_id }}
+          SPRING_DATASOURCE_URL: ${{ secrets.spring_datasource_url }}
+          SPRING_DATASOURCE_USERNAME: ${{ secrets.spring_datasource_username }}
+          SPRING_DATASOURCE_PASSWORD: ${{ secrets.spring_datasource_password }}
+          SPRING_REDIS_HOST: ${{ secrets.spring_redis_host }}
+          SPRING_REDIS_PORT: ${{ secrets.spring_redis_port }}
+          SPRING_REDIS_PASSWORD: ${{ secrets.spring_redis_password }}
+          SPRING_REDIS_JEDIS_POOL_MAX-ACTIVE: 15
+          SPRING_REDIS_JEDIS_POOL_MAX-IDLE: 5
+          SPRING_REDIS_JEDIS_POOL_MIN-IDLE: 3
+          SPRING_REDIS_CLIENT_TYPE: jedis          
