@@ -9,13 +9,6 @@ jobs:
     steps:
       - name: Checkout src
         uses: actions/checkout@v2
-      - name: Deploy
-        uses: akhileshns/heroku-deploy@v3.12.12
-        with:
-          heroku_api_key: ${{ secrets.heroku_api_key }}
-          heroku_app_name: "vttpmealplanner"
-          heroku_email: ${{ secrets.email }}
-          branch: ${{ github.ref_name }}
       - name: Heroku Configs
         run: |
           heroku config:set EDAMAM_API_KEY=${{ secrets.edamam_api_key }}
@@ -30,4 +23,10 @@ jobs:
           heroku config:set SPRING_REDIS_JEDIS_POOL_MAX-IDLE=5
           heroku config:set SPRING_REDIS_JEDIS_POOL_MIN-IDLE=3
           heroku config:set SPRING_REDIS_CLIENT_TYPE=jedis
-                    
+      - name: Deploy
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ secrets.heroku_api_key }}
+          heroku_app_name: "vttpmealplanner"
+          heroku_email: ${{ secrets.email }}
+          branch: ${{ github.ref_name }}                              
