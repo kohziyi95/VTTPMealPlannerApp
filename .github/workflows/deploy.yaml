@@ -9,6 +9,20 @@ jobs:
     steps:
       - name: Checkout src
         uses: actions/checkout@v2
+      - name: Heroku Configs
+        run:
+          heroku config:set EDAMAM_API_KEY=${{ secrets.edamam_api_key }}
+          heroku config:set EDAMAM_API_ID=${{ secrets.edamam_api_id }}
+          heroku config:set SPRING_DATASOURCE_URL=${{ secrets.spring_datasource_url }}
+          heroku config:set SPRING_DATASOURCE_USERNAME=${{ secrets.spring_datasource_username }}
+          heroku config:set SPRING_DATASOURCE_PASSWORD=${{ secrets.spring_datasource_password }}
+          heroku config:set SPRING_REDIS_HOST=${{ secrets.spring_redis_host }}
+          heroku config:set SPRING_REDIS_PORT=${{ secrets.spring_redis_port }}
+          heroku config:set SPRING_REDIS_PASSWORD=${{ secrets.spring_redis_password }}
+          heroku config:set SPRING_REDIS_JEDIS_POOL_MAX-ACTIVE=15
+          heroku config:set SPRING_REDIS_JEDIS_POOL_MAX-IDLE=5
+          heroku config:set SPRING_REDIS_JEDIS_POOL_MIN-IDLE=3
+          heroku config:set SPRING_REDIS_CLIENT_TYPE=jedis
       - name: Deploy
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
@@ -16,16 +30,4 @@ jobs:
           heroku_app_name: "vttpmealplanner"
           heroku_email: ${{ secrets.email }}
           branch: ${{ github.ref_name }}
-        env:
-          EDAMAM_API_KEY: ${{ secrets.edamam_api_key }}
-          EDAMAM_API_ID: ${{ secrets.edamam_api_id }}
-          SPRING_DATASOURCE_URL: ${{ secrets.spring_datasource_url }}
-          SPRING_DATASOURCE_USERNAME: ${{ secrets.spring_datasource_username }}
-          SPRING_DATASOURCE_PASSWORD: ${{ secrets.spring_datasource_password }}
-          SPRING_REDIS_HOST: ${{ secrets.spring_redis_host }}
-          SPRING_REDIS_PORT: ${{ secrets.spring_redis_port }}
-          SPRING_REDIS_PASSWORD: ${{ secrets.spring_redis_password }}
-          SPRING_REDIS_JEDIS_POOL_MAX-ACTIVE: 15
-          SPRING_REDIS_JEDIS_POOL_MAX-IDLE: 5
-          SPRING_REDIS_JEDIS_POOL_MIN-IDLE: 3
-          SPRING_REDIS_CLIENT_TYPE: jedis          
+                    
