@@ -17,7 +17,7 @@ jobs:
           heroku_email: ${{ secrets.email }}
           branch: ${{ github.ref_name }}
       - name: Heroku Configs
-        run:
+        run: |
           heroku config:set EDAMAM_API_KEY=${{ secrets.edamam_api_key }}
           heroku config:set EDAMAM_API_ID=${{ secrets.edamam_api_id }}
           heroku config:set SPRING_DATASOURCE_URL=${{ secrets.spring_datasource_url }}
