@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
@@ -34,6 +35,11 @@ public class ListController {
     public ModelAndView getMyRecipes (
             @PathVariable String userId,
             HttpSession sess) {
+        
+        if (!userId.equals((String)sess.getAttribute("userId"))){
+            ModelAndView mvc = new ModelAndView("index", HttpStatus.FORBIDDEN);
+            return mvc;
+        }
 
         ModelAndView mvc = new ModelAndView("savedRecipes");
 
@@ -46,7 +52,7 @@ public class ListController {
 
         mvc.addObject("savedRecipes", savedRecipes);
         mvc.addObject("user", sess.getAttribute("username"));
-        mvc.addObject("userId", sess.getAttribute("userId"));
+        mvc.addObject("userId", userId);
         return mvc;
     }
     

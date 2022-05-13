@@ -36,19 +36,27 @@ public class LoginController {
 
         String username = payload.getFirst("username");
         String password = payload.getFirst("password");
-        String userId = svc.authenticateUser(username, password);
+        String userId = null;
         try {
-            if(userId == null){
-                if(repo.getUserCountbyUsername(username) == 0)
-                    throw new Exception("Username not found. Please try again.");
+            userId = svc.authenticateUser(username, password);
+            // if(userId == null){
+            //     if(repo.getUserCountbyUsername(username) == 0)
+            //         throw new Exception("Username not found. Please try again.");
 
-                throw new Exception("Wrong password. Please try again.");
-            }
+            //     throw new Exception("Wrong password. Please try again.");
+            // }
         } catch (Exception e) {
+            
             mvc.setViewName("loginUser");
             // mvc.setStatus(HttpStatus.FORBIDDEN);
             mvc.addObject("error", "Error.");
             String errorMessage = e.getMessage();
+            if(repo.getUserCountbyUsername(username) == 0){
+                errorMessage = "Username not found. Please try again.";
+            } else {
+                errorMessage = "Wrong password. Please try again.";
+            }
+
             mvc.addObject("message", "Unable to log in. " +  errorMessage);
             return mvc;    
         }

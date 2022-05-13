@@ -44,7 +44,7 @@ public class LoginService {
         return added;
     }
 
-    public String authenticateUser(String username, String password){
+    public String authenticateUser(String username, String password) throws Exception{
         return repo.getUserIdbyUsernameAndPassword(username, password);
     }
 

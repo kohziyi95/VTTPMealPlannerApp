@@ -54,8 +54,13 @@ public class LoginRepository {
         return userCount;
     }
 
-    public String getUserIdbyUsernameAndPassword(String username, String password){
-        String userId = template.queryForObject(SQL_AUTHENTICATE_USER, String.class, username, password);
+    public String getUserIdbyUsernameAndPassword(String username, String password) throws Exception{
+        String userId = null;
+        try {
+            userId = template.queryForObject(SQL_AUTHENTICATE_USER, String.class, username, password);
+        } catch (Exception e) {
+            throw new Exception("Failed to authenticate account.");
+        }
         return userId;
     }
 
