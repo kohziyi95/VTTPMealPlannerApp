@@ -19,18 +19,18 @@ jobs:
           branch: ${{ github.ref_name }}   
       - name: Heroku Configs
         run: |
-          heroku config:set -app $EDAMAM_API_KEY
-          heroku config:set -app $EDAMAM_API_ID
-          heroku config:set -app $SPRING_DATASOURCE_URL
-          heroku config:set -app $SPRING_DATASOURCE_USERNAME
-          heroku config:set -app $SPRING_DATASOURCE_PASSWORD
-          heroku config:set -app $SPRING_REDIS_HOST
-          heroku config:set -app $SPRING_REDIS_PORT
-          heroku config:set -app $SPRING_REDIS_PASSWORD
-          heroku config:set -app $SPRING_REDIS_JEDIS_POOL_MAX-ACTIVE
-          heroku config:set -app $SPRING_REDIS_JEDIS_POOL_MAX-IDLE
-          heroku config:set -app $SPRING_REDIS_JEDIS_POOL_MIN-IDLE
-          heroku config:set -app $SPRING_REDIS_CLIENT_TYPE
+          heroku config:set -app EDAMAM_API_KEY=$EDAMAM_API_KEY
+          heroku config:set -app EDAMAM_API_ID=$EDAMAM_API_ID
+          heroku config:set -app SPRING_DATASOURCE_URL=$SPRING_DATASOURCE_URL
+          heroku config:set -app SPRING_DATASOURCE_USERNAME=$SPRING_DATASOURCE_USERNAME
+          heroku config:set -app SPRING_DATASOURCE_PASSWORD=$SPRING_DATASOURCE_PASSWORD
+          heroku config:set -app SPRING_REDIS_HOST=$SPRING_REDIS_HOST
+          heroku config:set -app SPRING_REDIS_PORT=$SPRING_REDIS_PORT
+          heroku config:set -app SPRING_REDIS_PASSWORD=$SPRING_REDIS_PASSWORD
+          heroku config:set -app SPRING_REDIS_JEDIS_POOL_MAX-ACTIVE=$SPRING_REDIS_JEDIS_POOL_MAX-ACTIVE
+          heroku config:set -app SPRING_REDIS_JEDIS_POOL_MAX-IDLE=$SPRING_REDIS_JEDIS_POOL_MAX-IDLE
+          heroku config:set -app SPRING_REDIS_JEDIS_POOL_MIN-IDLE=$SPRING_REDIS_JEDIS_POOL_MIN-IDLE
+          heroku config:set -app SPRING_REDIS_CLIENT_TYPE=$SPRING_REDIS_CLIENT_TYPE
         env: 
           EDAMAM_API_KEY: ${{ secrets.edamam_api_key }}
           EDAMAM_API_ID: ${{ secrets.edamam_api_id }}
