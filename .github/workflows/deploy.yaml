@@ -19,6 +19,7 @@ jobs:
           branch: ${{ github.ref_name }}   
       - name: Heroku Configs
         run: |
+          heroku git:remote --app vttpmealplanner
           heroku config:set -app EDAMAM_API_KEY=$EDAMAM_API_KEY
           heroku config:set -app EDAMAM_API_ID=$EDAMAM_API_ID
           heroku config:set -app SPRING_DATASOURCE_URL=$SPRING_DATASOURCE_URL
