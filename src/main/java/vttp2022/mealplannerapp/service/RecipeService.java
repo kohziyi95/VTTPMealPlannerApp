@@ -159,14 +159,15 @@ public class RecipeService {
 
     @Transactional
     public boolean saveRecipe(Recipe recipe, String userId) throws Exception{
+        recipeRepo.sqlInsertRecipes(recipe, userId);
+        int recipeId = 0;
         try {
-            recipeRepo.sqlInsertRecipes(recipe, userId);
+            recipeId = recipeRepo.sqlGetRecipeId(recipe, userId);
         } catch (Exception e) {
             logger.log(Level.INFO, "Recipe has already been saved.");
             return false;
         }
         
-        int recipeId = recipeRepo.sqlGetRecipeId(recipe, userId);
         recipe.setId(recipeId);
 
         recipeRepo.redisPutRecipe(recipe, userId);
@@ -182,6 +183,6 @@ public class RecipeService {
             logger.log(Level.INFO, "Saved Recipes >>>>>>>>>> " + recipe.getRecipeName());
         }
         return recipeList;
-    }
+    } 
 
 }
