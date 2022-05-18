@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
@@ -63,7 +64,7 @@ public class RecipeController {
     }
     
     @PostMapping(path = "/search")
-    public ModelAndView getSearchRecipe (
+    public ModelAndView postSearchRecipe (
             
             @RequestBody MultiValueMap<String, String> payload,
             HttpSession sess) {
@@ -138,14 +139,18 @@ public class RecipeController {
             try {
                 if (svc.saveRecipe(recipe, userId)){
                     mvc.addObject("message", "Recipe Saved.");
+                } else {
+                    throw new Exception();
                 }
             } catch (Exception e) {
                 logger.log(Level.WARNING, e.getMessage());
                 mvc.addObject("message", "Recipe has already been saved.");
+                mvc.setStatus(HttpStatus.BAD_REQUEST);
             };
-        } else if (payload.containsKey("saveIngredients")){
-            saveIngredients = Boolean.valueOf(payload.getFirst("saveIngredients"));
         }
+        // } else if (payload.containsKey("saveIngredients")){
+        //     saveIngredients = Boolean.valueOf(payload.getFirst("saveIngredients"));
+        // }
 
         mvc.addObject("recipeIndex", recipeIndex);
         mvc.addObject("recipe", recipe);

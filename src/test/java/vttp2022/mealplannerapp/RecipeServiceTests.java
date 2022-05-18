@@ -88,7 +88,7 @@ class RecipeServiceTests {
 		List<String> ingredientList = new ArrayList<>();
 		ingredientList.add("apple");
 		recipe.setIngredientLines(ingredientList);
-		assertFalse(recipeSvc.saveRecipe(recipe, "test0001"));
+		assertFalse(recipeSvc.saveRecipe(recipe, "test0001")); 
 	}
 
 	@Test

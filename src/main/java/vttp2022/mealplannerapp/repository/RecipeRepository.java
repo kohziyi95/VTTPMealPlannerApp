@@ -31,8 +31,8 @@ public class RecipeRepository {
     private final String SQL_SELECT_RECIPE_ID = 
         "select id from recipes where recipe_name = ? and user_id = ?";
         
-        private final String SQL_SELECT_RECIPE_BY_USER_ID = 
-        "select * from recipes where user_id = ?";   
+    private final String SQL_SELECT_RECIPE_BY_USER_ID = 
+        "select * from recipes where user_id = ?";       
 
 
     public boolean sqlInsertRecipes(Recipe recipe, String userId){

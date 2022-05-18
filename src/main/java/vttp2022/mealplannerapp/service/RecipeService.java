@@ -157,7 +157,7 @@ public class RecipeService {
         return nextPage;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public boolean saveRecipe(Recipe recipe, String userId) throws Exception{
         recipeRepo.sqlInsertRecipes(recipe, userId);
         int recipeId = 0;

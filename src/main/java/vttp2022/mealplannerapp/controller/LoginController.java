@@ -3,6 +3,7 @@ package vttp2022.mealplannerapp.controller;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
@@ -40,15 +41,12 @@ public class LoginController {
         try {
             userId = svc.authenticateUser(username, password);
             // if(userId == null){
-            //     if(repo.getUserCountbyUsername(username) == 0)
-            //         throw new Exception("Username not found. Please try again.");
-
-            //     throw new Exception("Wrong password. Please try again.");
+            //     throw new Exception();
             // }
         } catch (Exception e) {
             
             mvc.setViewName("loginUser");
-            // mvc.setStatus(HttpStatus.FORBIDDEN);
+            mvc.setStatus(HttpStatus.UNAUTHORIZED);
             mvc.addObject("error", "Error.");
             String errorMessage = e.getMessage();
             if(repo.getUserCountbyUsername(username) == 0){
@@ -90,13 +88,15 @@ public class LoginController {
         String verifyPassword = payload.getFirst("verify_password");
         String email = payload.getFirst("email");
         try {
-            if(!password.equals(verifyPassword))
+            if(!password.equals(verifyPassword)){
                 throw new Exception("Passwords do not match. Please try again.");
+            }
             boolean registerStatus = svc.createUser(username, password, email);
             if (!registerStatus) {
                 throw new Exception("Unknown error occured. Please try again.");
             }
         } catch (Exception e) {
+            mvc.setStatus(HttpStatus.BAD_REQUEST);
             mvc.setViewName("registerUser");
             mvc.addObject("error", "Error.");
             String errorMessage = e.getMessage();
