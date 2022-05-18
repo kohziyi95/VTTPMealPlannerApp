@@ -2,6 +2,8 @@ package vttp2022.mealplannerapp;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -25,87 +27,44 @@ class LoginServiceTests {
 	private LoginService loginSvc;
 
 	@Autowired
-	private LoginRepository LoginRepo;
-
-	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
-	@Test
-	void createUserShouldReturnTrue(){
-		if (jdbcTemplate.queryForObject("select count(*) from user where username = 'test1'",Integer.class) > 0){
-			int updated = jdbcTemplate.update("delete from user where username = 'test1'");
-		};
-        User user = new User();
-		// Mockito.when(mockLoginRepo.insertUser(user)).thenReturn(true);
-		boolean added = false;
+	private boolean userAdded = false;
+
+	@BeforeEach
+	void init(){
 		try {
-			added = loginSvc.createUser("test1", "12345678", "test@test.com");
+			userAdded = loginSvc.createUser("loginTest1", "12345678", "loginTest@test.com");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		assertTrue(added);
+	}
+
+	@Test
+	void createUserShouldReturnTrue(){
+		assertTrue(userAdded);
 	}
 
 	@Test
 	void usernameShouldThrowException(){
-		if (jdbcTemplate.queryForObject("select count(*) from user where username = 'test2'",Integer.class) > 0){
-			int updated = jdbcTemplate.update("delete from user where username = 'test2'");
-		};
-
-        User user = new User();
-		boolean added = false;
-		try {
-			added = loginSvc.createUser("test2", "12345678", "test2@test.com");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		try {
-			added = loginSvc.createUser("test2", "12345678", "test3@test.com");
-		} catch (Exception e) {
-			e.printStackTrace();
-			assertEquals("Username already exists.", e.getMessage());
-		}
+		assertThrows(Exception.class, () -> loginSvc.createUser("loginTest1", "12345678", "test1@test.com"));
 	}
 
 	@Test
 	void emailShouldThrowException(){
-		if (jdbcTemplate.queryForObject("select count(*) from user where username = 'test3'",Integer.class) > 0){
-			int updated = jdbcTemplate.update("delete from user where username = 'test3'");
-		};
-
-        User user = new User();
-		boolean added = false;
-		try {
-			added = loginSvc.createUser("test3", "12345678", "test3@test.com");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		try {
-			added = loginSvc.createUser("test4", "12345678", "test3@test.com");
-		} catch (Exception e) {
-			e.printStackTrace();
-			assertEquals("Email already exists.", e.getMessage());
-		}
+		assertThrows(Exception.class, () -> loginSvc.createUser("test2", "12345678", "loginTest@test.com"));
 	}
 
 	@Test
 	void authenticateUserShouldReturnTrue() throws Exception{
-		if (jdbcTemplate.queryForObject("select count(*) from user where username = 'test5'",Integer.class) > 0){
-			int updated = jdbcTemplate.update("delete from user where username = 'test5'");
-		};
-		User user = new User();
-		boolean added = false;
-		String username = "test5";
+		String username = "loginTest1";
 		String password = "12345678";
-		String email = "test5@test.com";
-		try {
-			added = loginSvc.createUser(username, password, email);
-		} catch (Exception e) {
-			e.printStackTrace();
 		String userId = loginSvc.authenticateUser(username, password);
-		assertNotEquals(userId,null);
-		}
+		assertTrue(!userId.equals(null));
+	}
+
+	@AfterEach
+	void destroy(){
+		jdbcTemplate.update("delete from user where username = 'loginTest1'");
 	}
 }
