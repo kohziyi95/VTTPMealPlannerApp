@@ -6,6 +6,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,6 +17,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.web.servlet.MockMvc;
 
 import vttp2022.mealplannerapp.controller.LoginController;
+import vttp2022.mealplannerapp.service.LoginService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -30,6 +33,18 @@ class LoginControllerTests {
     @Autowired
     private LoginController controller;
 
+	@Autowired 
+	private LoginService loginSvc;
+
+	@BeforeEach
+	void init(){
+		try {
+			loginSvc.createUser("loginTest1", "12345678", "loginTest@test.com");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
     @Test
 	public void contextLoads() throws Exception {
 		assertThat(controller).isNotNull();
@@ -44,7 +59,7 @@ class LoginControllerTests {
 
 	@Test
 	public void postLoginTestPass() throws Exception {
-		String username = "test1";
+		String username = "loginTest1";
 		String password = "12345678";
 
 		// Mockito.when(loginSvc.authenticateUser(username, password)).thenReturn("4b19d09b");
@@ -131,6 +146,11 @@ class LoginControllerTests {
 			.param("email", email))
       		// .andDo(print())
 			.andExpect(status().isBadRequest());
+	}
+
+	@AfterEach
+	void destroy(){
+		jdbcTemplate.update("delete from user where username = 'loginTest1'");
 	}
 
 

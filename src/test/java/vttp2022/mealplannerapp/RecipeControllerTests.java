@@ -16,7 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.web.servlet.MockMvc;
 
-import vttp2022.mealplannerapp.controller.LoginController;
 import vttp2022.mealplannerapp.controller.RecipeController;
 import vttp2022.mealplannerapp.model.Recipe;
 import vttp2022.mealplannerapp.service.LoginService;
