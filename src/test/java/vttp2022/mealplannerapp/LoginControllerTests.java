@@ -74,7 +74,7 @@ class LoginControllerTests {
 
 	@Test
 	public void postLoginTestFailUsername() throws Exception {
-		String username = "user1";
+		String username = "userTest1";
 		String password = "password1";
 
 		// Mockito.when(loginSvc.authenticateUser(username, password)).thenReturn(null);
