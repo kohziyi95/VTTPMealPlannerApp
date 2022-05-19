@@ -32,6 +32,16 @@
                 
             </div>
         </div>
+        <div class="row mb-3">
+            <div class="col text-center" >
+                <form th:action="@{/list/userId/delete}" method="POST">
+                    <button class="btn btn-danger" type="submit">Delete</button>
+                    <input type="hidden" name="recipeId" th:value="${recipe.Id}">
+                    <input type="hidden" name="username" th:value="${user}">
+
+                </form>
+            </div>
+        </div>
     </div>
    
 

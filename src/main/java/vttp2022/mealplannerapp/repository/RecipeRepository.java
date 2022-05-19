@@ -32,7 +32,10 @@ public class RecipeRepository {
         "select id from recipes where recipe_name = ? and user_id = ?";
         
     private final String SQL_SELECT_RECIPE_BY_USER_ID = 
-        "select * from recipes where user_id = ?";       
+        "select * from recipes where user_id = ?"; 
+        
+    private final String SQL_DELETE_RECIPE =
+        "delete from recipes where id = ?";
 
 
     public boolean sqlInsertRecipes(Recipe recipe, String userId){
@@ -60,11 +63,20 @@ public class RecipeRepository {
         return idList;
     }
 
+    public boolean sqlDeleteRecipe(int recipeId){
+        int deleted = jdbcTemplate.update(SQL_DELETE_RECIPE, recipeId);
+        return deleted > 0;
+    }
+
 
     //REDIS Methods
     public void redisPutRecipe(Recipe recipe, String userId){
-        redisTemplate.opsForList().leftPush(userId, String.valueOf(recipe.getId()));
+        // redisTemplate.opsForList().leftPush(userId, String.valueOf(recipe.getId()));
         redisTemplate.opsForHash().put(userId + "_Map", String.valueOf(recipe.getId()), recipe);
+    }
+
+    public void redisDeleteRecipe(int recipeId, String userId){
+        redisTemplate.opsForHash().delete(userId + "_Map", String.valueOf(recipeId));
     }
 
     public Recipe redisGetRecipe(String userId, int recipeId) throws Exception{

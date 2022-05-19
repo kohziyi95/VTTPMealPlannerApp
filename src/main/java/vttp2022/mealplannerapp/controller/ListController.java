@@ -9,9 +9,13 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import vttp2022.mealplannerapp.model.Recipe;
@@ -50,50 +54,37 @@ public class ListController {
         return mvc;
     }
     
-    // @PostMapping(path = "/search")
-    // public ModelAndView getSearchRecipe (
-            
-    //         @RequestBody MultiValueMap<String, String> payload,
-    //         HttpSession sess) {
+    @PostMapping(path = "/{userId}/delete")
+    public ModelAndView postDeleteRecipe (
+        @RequestParam int recipeId, 
+        @RequestParam String username,
+        @PathVariable String userId, 
+        HttpSession sess) {
+         
+        try {
+            svc.deleteSavedRecipes(recipeId, userId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-    //     String query = payload.getFirst("query");
-    //     String cuisineType = payload.getFirst("cuisineType"); 
-    //     String mealType = payload.getFirst("mealType");
-    //     boolean nextPage = false;
-    //     // boolean prevPage = false;
-    //     if (payload.containsKey("nextPage")) {
-    //         nextPage = Boolean.valueOf(payload.getFirst("nextPage")) ;
-    //     };
-        
-    //     ModelAndView mvc = new ModelAndView();
+        // return "redirect:/list/" + userId + "/myrecipes";
+        ModelAndView mvc = new ModelAndView("savedRecipes");
 
-    //     List<Recipe> recipeList = new ArrayList<>();
-    //     String url = (String) sess.getAttribute("currentUrl");
-    //     logger.log(Level.INFO, "Current Url >>>>>> " + url);
+        List<Recipe> savedRecipes = new ArrayList<>();
+        try {
+            savedRecipes = svc.getSavedRecipes(userId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-    //     if (nextPage) {
-    //         sess.setAttribute("previousUrl", url);
-    //         url = svc.getNextPage(url);
-    //         sess.setAttribute("currentUrl", url);
-    //     }
+        sess.setAttribute("userId", userId);
+        sess.setAttribute("username", username);
 
-    //     if (url == null) {
-    //         mvc.addObject("lastPage", true);
-    //     }
-
-    //     recipeList = svc.searchRecipes(url);
-
-    //     mvc.addObject("query", query);
-    //     mvc.addObject("cuisineType", cuisineType);
-    //     mvc.addObject("mealType", mealType);
-    //     mvc.addObject("recipeList", recipeList);
-    //     mvc.setViewName("recipeSearch");
-    //     sess.setAttribute("recipeList", recipeList);
-    //     mvc.addObject("user", sess.getAttribute("username"));
-    //     mvc.addObject("userId", sess.getAttribute("userId"));
-        
-    //     return mvc;
-    // }
+        mvc.addObject("savedRecipes", savedRecipes);
+        mvc.addObject("user", sess.getAttribute("username"));
+        mvc.addObject("userId", userId);
+        return mvc;
+    }
 
 
     // @GetMapping(path = "/search/details")

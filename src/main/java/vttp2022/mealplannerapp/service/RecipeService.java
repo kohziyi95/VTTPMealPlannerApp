@@ -1,32 +1,19 @@
 package vttp2022.mealplannerapp.service;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.ClientHttpRequestFactory;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import jakarta.json.Json;
@@ -159,14 +146,22 @@ public class RecipeService {
 
     @Transactional(rollbackFor = Exception.class)
     public boolean saveRecipe(Recipe recipe, String userId) throws Exception{
-        recipeRepo.sqlInsertRecipes(recipe, userId);
+        // recipeRepo.sqlInsertRecipes(recipe, userId);
         int recipeId = 0;
         try {
             recipeId = recipeRepo.sqlGetRecipeId(recipe, userId);
+            if (recipeRepo.sqlGetRecipeId(recipe, userId) > 0){
+                throw new Exception("Recipe has already been saved");
+            }
         } catch (Exception e) {
-            logger.log(Level.INFO, "Recipe has already been saved.");
-            return false;
+            if (e.getMessage() == "Recipe has already been saved"){
+                return false;
+            }
+            // e.printStackTrace();
         }
+
+        recipeRepo.sqlInsertRecipes(recipe, userId);
+        recipeId = recipeRepo.sqlGetRecipeId(recipe, userId);
         
         recipe.setId(recipeId);
 
@@ -184,5 +179,27 @@ public class RecipeService {
         }
         return recipeList;
     } 
+    
+    @Transactional
+    public boolean deleteSavedRecipes(int recipeId, String userId) throws Exception{
+        boolean deleted = recipeRepo.sqlDeleteRecipe(recipeId);
+        recipeRepo.redisDeleteRecipe(recipeId, userId);
+        return deleted;
+    }
+
+    @Transactional
+    public boolean deleteSavedRecipes(Recipe recipe, String userId) throws Exception{
+        int recipeId = recipe.getId();
+        boolean deleted = recipeRepo.sqlDeleteRecipe(recipeId);
+        recipeRepo.redisDeleteRecipe(recipeId, userId);
+        return deleted;
+    }
+
+    public void redisDeleteAllFromUser(String userId){
+        List<Integer> idList = recipeRepo.sqlGetAllRecipeId(userId);
+        for (int id : idList){
+            recipeRepo.redisDeleteRecipe(id, userId);
+        }
+    }
 
 }
