@@ -8,7 +8,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.List;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,7 +27,7 @@ import vttp2022.mealplannerapp.service.RecipeService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class RecipeControllerTests {
 
 	@Autowired
@@ -42,6 +45,20 @@ class RecipeControllerTests {
 	@Autowired
 	private LoginService loginSvc;
 
+	private String url;
+	private List<Recipe> recipeList;
+	private int recipeIndex;
+
+	@BeforeAll
+	void init(){
+		String query = "chicken";
+		String cuisineType = "";
+		String mealType = "dinner";
+		url = recipeSvc.getUrlStringByQuery(query, cuisineType, mealType);
+		recipeList = recipeSvc.searchRecipes(url);
+		recipeIndex = 1;
+		
+	}
 
     @Test
 	public void contextLoads() throws Exception {
@@ -60,10 +77,10 @@ class RecipeControllerTests {
 
 	@Test
 	public void postSearchRecipeTestPass() throws Exception {
-		String query = "chicken";
-		String cuisineType = "";
-		String mealType = "dinner";
-		String url = recipeSvc.getUrlStringByQuery(query, cuisineType, mealType);
+		// String query = "chicken";
+		// String cuisineType = "";
+		// String mealType = "dinner";
+		// String url = recipeSvc.getUrlStringByQuery(query, cuisineType, mealType);
 
 		mockMvc.perform(post("/recipe/search")
 			.param("query", "chicken")
@@ -78,12 +95,12 @@ class RecipeControllerTests {
 
 	@Test
 	public void getRecipeDetails() throws Exception {
-		String query = "chicken";
-		String cuisineType = "";
-		String mealType = "dinner";
-		String url = recipeSvc.getUrlStringByQuery(query, cuisineType, mealType);
-		List<Recipe> recipeList = recipeSvc.searchRecipes(url);
-		int recipeIndex = 1;
+		// String query = "chicken";
+		// String cuisineType = "";
+		// String mealType = "dinner";
+		// String url = recipeSvc.getUrlStringByQuery(query, cuisineType, mealType);
+		// List<Recipe> recipeList = recipeSvc.searchRecipes(url);
+		// int recipeIndex = 1;
 		
 
 		mockMvc.perform(get("/recipe/search/details")
@@ -98,16 +115,16 @@ class RecipeControllerTests {
 	public void postRecipeDetailsPass() throws Exception {
 
 		
-		String query = "chicken";
-		String cuisineType = "";
-		String mealType = "dinner";
-		String url = recipeSvc.getUrlStringByQuery(query, cuisineType, mealType);
-		List<Recipe> recipeList = recipeSvc.searchRecipes(url);
+		// String query = "chicken";
+		// String cuisineType = "";
+		// String mealType = "dinner";
+		// String url = recipeSvc.getUrlStringByQuery(query, cuisineType, mealType);
+		// List<Recipe> recipeList = recipeSvc.searchRecipes(url);
 		String username = "postRecipeTest1";
 
-		if (jdbcTemplate.queryForObject("select count(*) from user where username = 'postRecipeTest1'",Integer.class) > 0){
-			jdbcTemplate.update("delete from user where username = 'postRecipeTest1'");
-		};
+		// if (jdbcTemplate.queryForObject("select count(*) from user where username = 'postRecipeTest1'",Integer.class) > 0){
+		// 	jdbcTemplate.update("delete from user where username = 'postRecipeTest1'");
+		// };
 
 		loginSvc.createUser(username, "12345678", "postRecipeTest1@test.com");
 		String userId = loginSvc.authenticateUser(username, "12345678");
@@ -129,16 +146,16 @@ class RecipeControllerTests {
 	public void postRecipeDetailsFail() throws Exception {
 
 		
-		String query = "chicken";
-		String cuisineType = "";
-		String mealType = "dinner";
-		String url = recipeSvc.getUrlStringByQuery(query, cuisineType, mealType);
-		List<Recipe> recipeList = recipeSvc.searchRecipes(url);
+		// String query = "chicken";
+		// String cuisineType = "";
+		// String mealType = "dinner";
+		// String url = recipeSvc.getUrlStringByQuery(query, cuisineType, mealType);
+		// List<Recipe> recipeList = recipeSvc.searchRecipes(url);
 		String username = "postRecipeTest2";
 
-		if (jdbcTemplate.queryForObject("select count(*) from user where username = 'postRecipeTest2'",Integer.class) > 0){
-			jdbcTemplate.update("delete from user where username = 'postRecipeTest2'");
-		};
+		// if (jdbcTemplate.queryForObject("select count(*) from user where username = 'postRecipeTest2'",Integer.class) > 0){
+		// 	jdbcTemplate.update("delete from user where username = 'postRecipeTest2'");
+		// };
 
 		loginSvc.createUser(username, "12345678", "postRecipeTest2@test.com");
 		String userId = loginSvc.authenticateUser(username, "12345678");
@@ -158,5 +175,14 @@ class RecipeControllerTests {
 			.andExpect(status().isBadRequest());
 	}
 
+	@AfterAll
+	void destroy(){
+		String test1UserId = jdbcTemplate.queryForObject("select user_id from user where username = 'postRecipeTest1'",String.class);
+		String test2UserId = jdbcTemplate.queryForObject("select user_id from user where username = 'postRecipeTest2'",String.class);
 
+		jdbcTemplate.update("delete from user where user_id = ? ", test1UserId);
+		jdbcTemplate.update("delete from user where user_id = ? ", test2UserId);
+		jdbcTemplate.update("delete from recipes where user_id = ? ", test1UserId);
+		jdbcTemplate.update("delete from recipes where user_id = ? ", test2UserId);
+	}
 }

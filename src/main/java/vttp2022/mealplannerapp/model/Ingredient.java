@@ -8,17 +8,18 @@ import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 
 public class Ingredient implements Serializable {
-    private String id;
+    private String ingredientId;
     private String itemName;
     private Float quantity;
     private String measure;
     private String imgUrl;
+    private Integer recipeId;
 
-    public String getId() {
-        return id;
+    public String getIngredientId() {
+        return ingredientId;
     }
-    public void setId(String id) {
-        this.id = id;
+    public void setIngredientId(String ingredientId) {
+        this.ingredientId = ingredientId;
     }
     public String getItemName() {
         return itemName;
@@ -44,13 +45,18 @@ public class Ingredient implements Serializable {
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
     }
-
+    public Integer getRecipeId() {
+        return recipeId;
+    }
+    public void setRecipeId(Integer recipeId) {
+        this.recipeId = recipeId;
+    }
     public static List<Ingredient> getList(JsonArray jsonArray){
         List<Ingredient> list = new ArrayList<>();
         for (int i = 0; i < jsonArray.size(); i++){
             JsonObject obj = (JsonObject) jsonArray.get(i);
             Ingredient ingredient = new Ingredient();
-            ingredient.setId(obj.getString("foodId"));
+            ingredient.setIngredientId(obj.getString("foodId"));
             ingredient.setItemName(obj.getString("food"));
             ingredient.setQuantity(Float.parseFloat(obj.get("quantity").toString()));
 

@@ -22,7 +22,7 @@ import vttp2022.mealplannerapp.service.RecipeService;
 @Controller
 @RequestMapping(path = "/list")
 public class IngredientController {
-    private Logger logger = Logger.getLogger(ListController.class.getName());
+    private Logger logger = Logger.getLogger(IngredientController.class.getName());
 
     @Autowired
     private RecipeService svc;

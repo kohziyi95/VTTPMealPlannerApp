@@ -29,7 +29,7 @@
             <div class="col text-center" th:if="${user}">
                 <form action="/recipe/search/details" method="POST">
                     <button class="btn btn-danger" type="submit" name="saveRecipe" value=true>Save Recipe</button>
-                    <!-- <button class="btn btn-danger" type="submit" name="saveIngredients" value=true>Save Ingredients</button> -->
+                    <button class="btn btn-danger" type="submit" name="saveIngredients" value=true>Save Ingredients</button>
                     <input type="hidden" name="recipeIndex" th:value="${recipeIndex}">
                 </form>
                 

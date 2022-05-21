@@ -13,12 +13,14 @@ create table user(
 );
 
 create table ingredient_list(
-    id varchar(64) not null unique,
+    id int not null auto_increment,
+    ingredient_id varchar(64) not null,
     user_id varchar(8) not null,
     item_name varchar(64) not null,
     quantity float not null,
-    measure varchar(32) not null,
+    measure varchar(32),
     img_url varchar(128) not null,
+    recipe_id int not null,
     primary key(id)
 );
 

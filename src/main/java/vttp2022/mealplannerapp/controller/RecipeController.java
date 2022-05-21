@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import vttp2022.mealplannerapp.model.Recipe;
+import vttp2022.mealplannerapp.service.IngredientService;
 import vttp2022.mealplannerapp.service.RecipeService;
 
 @Controller
@@ -27,7 +28,10 @@ public class RecipeController {
     private Logger logger = Logger.getLogger(RecipeController.class.getName());
 
     @Autowired
-    private RecipeService svc;
+    private RecipeService recipeSvc;
+
+    @Autowired
+    private IngredientService ingredientSvc;
 
     @GetMapping(path = "/search")
     public ModelAndView getSearchRecipe (
@@ -39,15 +43,15 @@ public class RecipeController {
         ModelAndView mvc = new ModelAndView();
 
         List<Recipe> recipeList = new ArrayList<>();
-        String url = svc.getUrlStringByQuery(query, cuisineType, mealType);
+        String url = recipeSvc.getUrlStringByQuery(query, cuisineType, mealType);
         // if (nextPage) {
         //     url = svc.getNextPage(url);
         // }
-        if (svc.getNextPage(url) == null) {
+        if (recipeSvc.getNextPage(url) == null) {
             mvc.addObject("lastPage", true);
         }
 
-        recipeList = svc.searchRecipes(url);
+        recipeList = recipeSvc.searchRecipes(url);
 
         mvc.addObject("query", query);
         mvc.addObject("cuisineType", cuisineType);
@@ -85,7 +89,7 @@ public class RecipeController {
 
         if (nextPage) {
             sess.setAttribute("previousUrl", url);
-            url = svc.getNextPage(url);
+            url = recipeSvc.getNextPage(url);
             sess.setAttribute("currentUrl", url);
         }
 
@@ -93,7 +97,7 @@ public class RecipeController {
             mvc.addObject("lastPage", true);
         }
 
-        recipeList = svc.searchRecipes(url);
+        recipeList = recipeSvc.searchRecipes(url);
 
         mvc.addObject("query", query);
         mvc.addObject("cuisineType", cuisineType);
@@ -123,7 +127,7 @@ public class RecipeController {
     }
 
     @PostMapping(path = "/search/details")
-    public ModelAndView postRecipeDetails (@RequestBody MultiValueMap<String,String> payload, HttpSession sess) {
+    public ModelAndView postSaveRecipeDetails (@RequestBody MultiValueMap<String,String> payload, HttpSession sess) {
         List<Recipe> recipeList = (List<Recipe>) sess.getAttribute("recipeList");
         ModelAndView mvc = new ModelAndView("recipeDetails");
         String userId = (String) sess.getAttribute("userId");
@@ -136,7 +140,7 @@ public class RecipeController {
         if (payload.containsKey("saveRecipe")){
             // boolean saveRecipe = Boolean.valueOf(payload.getFirst("saveRecipe"));
             try {
-                if (svc.saveRecipe(recipe, userId)){
+                if (recipeSvc.saveRecipe(recipe, userId)){
                     mvc.addObject("message", "Recipe Saved.");
                 } else {
                     throw new Exception();
@@ -146,10 +150,20 @@ public class RecipeController {
                 mvc.addObject("message", "Recipe has already been saved.");
                 mvc.setStatus(HttpStatus.BAD_REQUEST);
             };
-        }
-        // } else if (payload.containsKey("saveIngredients")){
-        //     saveIngredients = Boolean.valueOf(payload.getFirst("saveIngredients"));
         // }
+        } else if (payload.containsKey("saveIngredients")){
+            // saveIngredients = Boolean.valueOf(payload.getFirst("saveIngredients"));
+            try {
+                if (ingredientSvc.saveIngredients(recipe, userId)){
+                    mvc.addObject("message", "Ingredients Saved.");
+                }
+            } catch (Exception e1) {
+                logger.log(Level.WARNING, e1.getMessage());
+                e1.printStackTrace();
+                mvc.addObject("message", e1.getMessage());
+                mvc.setStatus(HttpStatus.BAD_REQUEST);
+            }
+        }
 
         mvc.addObject("recipeIndex", recipeIndex);
         mvc.addObject("recipe", recipe);
