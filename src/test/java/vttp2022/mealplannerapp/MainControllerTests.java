@@ -24,17 +24,7 @@ class MainControllerTests {
 	@Autowired
 	private MockMvc mockMvc;
 
-	// @MockBean
-	// private RecipeService recipeSvc;
 
-	// @MockBean
-	// private RecipeRepository recipeRepo;
-
-	// @MockBean
-	// private LoginService loginSvc;
-
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
 
     @Autowired
     private MainController controller;
