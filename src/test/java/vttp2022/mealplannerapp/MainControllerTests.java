@@ -21,11 +21,6 @@ class MainControllerTests {
 	@Autowired
 	private MockMvc mockMvc;
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> master
     @Autowired
     private MainController controller;
 
