@@ -9,7 +9,6 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -131,11 +130,11 @@ public class RecipeController {
 
         int recipeIndex = Integer.parseInt(payload.getFirst("recipeIndex"));
         Recipe recipe = recipeList.get(recipeIndex);
-        boolean saveRecipe = false;
-        boolean saveIngredients = false;
+        // boolean saveRecipe = false;
+        // boolean saveIngredients = false;
 
         if (payload.containsKey("saveRecipe")){
-            saveRecipe = Boolean.valueOf(payload.getFirst("saveRecipe"));
+            // boolean saveRecipe = Boolean.valueOf(payload.getFirst("saveRecipe"));
             try {
                 if (svc.saveRecipe(recipe, userId)){
                     mvc.addObject("message", "Recipe Saved.");

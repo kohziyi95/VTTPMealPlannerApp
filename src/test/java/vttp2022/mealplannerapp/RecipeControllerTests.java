@@ -21,6 +21,7 @@ import vttp2022.mealplannerapp.model.Recipe;
 import vttp2022.mealplannerapp.service.LoginService;
 import vttp2022.mealplannerapp.service.RecipeService;
 
+
 @SpringBootTest
 @AutoConfigureMockMvc
 
@@ -105,7 +106,7 @@ class RecipeControllerTests {
 		String username = "postRecipeTest1";
 
 		if (jdbcTemplate.queryForObject("select count(*) from user where username = 'postRecipeTest1'",Integer.class) > 0){
-			int updated = jdbcTemplate.update("delete from user where username = 'postRecipeTest1'");
+			jdbcTemplate.update("delete from user where username = 'postRecipeTest1'");
 		};
 
 		loginSvc.createUser(username, "12345678", "postRecipeTest1@test.com");
@@ -136,7 +137,7 @@ class RecipeControllerTests {
 		String username = "postRecipeTest2";
 
 		if (jdbcTemplate.queryForObject("select count(*) from user where username = 'postRecipeTest2'",Integer.class) > 0){
-			int updated = jdbcTemplate.update("delete from user where username = 'postRecipeTest2'");
+			jdbcTemplate.update("delete from user where username = 'postRecipeTest2'");
 		};
 
 		loginSvc.createUser(username, "12345678", "postRecipeTest2@test.com");
