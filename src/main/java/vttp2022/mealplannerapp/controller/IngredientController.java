@@ -21,66 +21,66 @@ import vttp2022.mealplannerapp.service.RecipeService;
 
 @Controller
 @RequestMapping(path = "/list")
-public class ListController {
+public class IngredientController {
     private Logger logger = Logger.getLogger(ListController.class.getName());
 
     @Autowired
     private RecipeService svc;
 
-    @GetMapping(path = "/{userId}/myrecipes")
-    public ModelAndView getMyRecipes (
-            @PathVariable String userId,
-            HttpSession sess) {
+    // @GetMapping(path = "/{userId}/myrecipes")
+    // public ModelAndView getMyRecipes (
+    //         @PathVariable String userId,
+    //         HttpSession sess) {
         
-        if (!userId.equals((String)sess.getAttribute("userId"))){
-            ModelAndView mvc = new ModelAndView("index", HttpStatus.FORBIDDEN);
-            return mvc;
-        }
+    //     if (!userId.equals((String)sess.getAttribute("userId"))){
+    //         ModelAndView mvc = new ModelAndView("index", HttpStatus.FORBIDDEN);
+    //         return mvc;
+    //     }
 
-        ModelAndView mvc = new ModelAndView("savedRecipes");
+    //     ModelAndView mvc = new ModelAndView("savedRecipes");
 
-        List<Recipe> savedRecipes = new ArrayList<>();
-        try {
-            savedRecipes = svc.getSavedRecipes(userId);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    //     List<Recipe> savedRecipes = new ArrayList<>();
+    //     try {
+    //         savedRecipes = svc.getSavedRecipes(userId);
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     }
 
-        mvc.addObject("savedRecipes", savedRecipes);
-        mvc.addObject("user", sess.getAttribute("username"));
-        mvc.addObject("userId", userId);
-        return mvc;
-    }
+    //     mvc.addObject("savedRecipes", savedRecipes);
+    //     mvc.addObject("user", sess.getAttribute("username"));
+    //     mvc.addObject("userId", userId);
+    //     return mvc;
+    // }
     
-    @PostMapping(path = "/{userId}/delete")
-    public ModelAndView postDeleteRecipe (
-        @RequestParam int recipeId, 
-        @RequestParam String username,
-        @PathVariable String userId, 
-        HttpSession sess) {
+    // @PostMapping(path = "/{userId}/delete")
+    // public ModelAndView postDeleteRecipe (
+    //     @RequestParam int recipeId, 
+    //     @RequestParam String username,
+    //     @PathVariable String userId, 
+    //     HttpSession sess) {
          
-        try {
-            svc.deleteSavedRecipes(recipeId, userId);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    //     try {
+    //         svc.deleteSavedRecipes(recipeId, userId);
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     }
 
-        ModelAndView mvc = new ModelAndView("savedRecipes");
+    //     ModelAndView mvc = new ModelAndView("savedRecipes");
 
-        List<Recipe> savedRecipes = new ArrayList<>();
-        try {
-            savedRecipes = svc.getSavedRecipes(userId);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    //     List<Recipe> savedRecipes = new ArrayList<>();
+    //     try {
+    //         savedRecipes = svc.getSavedRecipes(userId);
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     }
 
-        sess.setAttribute("userId", userId);
-        sess.setAttribute("username", username);
+    //     sess.setAttribute("userId", userId);
+    //     sess.setAttribute("username", username);
 
-        mvc.addObject("savedRecipes", savedRecipes);
-        mvc.addObject("user", sess.getAttribute("username"));
-        mvc.addObject("userId", userId);
-        return mvc;
-    }
+    //     mvc.addObject("savedRecipes", savedRecipes);
+    //     mvc.addObject("user", sess.getAttribute("username"));
+    //     mvc.addObject("userId", userId);
+    //     return mvc;
+    // }
 
 }

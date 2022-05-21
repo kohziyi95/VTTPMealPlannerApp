@@ -113,7 +113,7 @@ class LoginControllerTests {
 	@Test
 	public void postRegisterTestPass() throws Exception {
 		if (jdbcTemplate.queryForObject("select count(*) from user where username = 'registerTest1'",Integer.class) > 0){
-			int updated = jdbcTemplate.update("delete from user where username = 'registerTest1'");
+			jdbcTemplate.update("delete from user where username = 'registerTest1'");
 		};
 
 		String username = "registerTest1";
