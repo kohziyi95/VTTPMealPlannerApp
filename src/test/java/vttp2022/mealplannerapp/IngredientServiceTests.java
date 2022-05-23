@@ -1,6 +1,7 @@
 package vttp2022.mealplannerapp;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -52,11 +53,12 @@ class IngredientServiceTests {
 
 	@BeforeAll
 	void init() throws Exception{
-		recipeList = recipeSvc.searchRecipes("chicken", "", "dinner");
-		recipe = recipeList.get(0);
-		// ingredientList = recipe.getIngredientList();
-		recipe.setId(999);
-		recipeId = recipe.getId();
+		// recipeList = recipeSvc.searchRecipes("chicken", "", "dinner");
+		// recipe = recipeList.get(0);
+		// // ingredientList = recipe.getIngredientList();
+		// recipe.setId(999);
+		// recipeId = recipe.getId();
+		recipe = recipe.createTestRecipe(999);
 		ingredientSaved = ingredientSvc.saveIngredients(recipe, "iTest001");
 	}
 
@@ -79,7 +81,7 @@ class IngredientServiceTests {
 	void deleteIngredients() throws Exception{
 		ingredientSvc.saveIngredients(recipe, "iTest002");
 
-		boolean deleted = ingredientSvc.deleteIngredients("iTest002", recipeId);
+		boolean deleted = ingredientSvc.deleteIngredients("iTest002", recipe.getId());
 		
 		// logger.log(Level.INFO, ingredientList.toString());\
 		assertAll(
@@ -92,13 +94,15 @@ class IngredientServiceTests {
 	@Test
 	void getAllIngredients() throws Exception{
 		for (int i = 0; i < 3; i++) {
-			recipe = recipeList.get(i);
+			// recipe = recipeList.get(i);
 			// ingredientList = recipe.getIngredientList();
-			recipe.setId(i);
+			// recipe.setId(i);
+			recipe = recipe.createTestRecipe(i);
+
 			ingredientSaved = ingredientSvc.saveIngredients(recipe, "iTest003");
 		}
 		List<Ingredient> list = ingredientSvc.getAllIngredients("iTest003");
-		assertTrue(list.size() >= 3);
+		assertEquals(3, list.size());
 	}
 	
 
