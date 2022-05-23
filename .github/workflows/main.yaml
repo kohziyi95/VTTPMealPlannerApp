@@ -45,7 +45,7 @@ jobs:
         space_name: verybigbucket
         space_region: sgp1
         source: .github/badges/jacoco.svg
-        out_dir: coverage/${{ github.event.repository.name }}
+        out_dir: coverage/${{ github.event.repository.name }}/badge
         permission: public-read
     - name: Upload coverage report to DigitalOcean spaces
       uses: BetaHuhn/do-spaces-action@v2

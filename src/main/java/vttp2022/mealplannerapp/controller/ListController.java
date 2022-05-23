@@ -60,7 +60,7 @@ public class ListController {
     @PostMapping(path = "/{userId}/myrecipes")
     public ModelAndView saveIngredients (
             @PathVariable String userId,
-            @RequestParam boolean saveIngredients,
+            // @RequestParam boolean saveIngredients,
             @RequestParam String username,
             @RequestParam int recipeIndex,
             HttpSession sess) {

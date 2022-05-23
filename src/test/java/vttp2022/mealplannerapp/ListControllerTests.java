@@ -78,9 +78,22 @@ class ListControllerTests {
 	@Test
 	public void getMyRecipeTest() throws Exception {
 
-
 		mockMvc.perform(get("/list/" + userId + "/myrecipes")
 			// .param("userId", userId)
+			.sessionAttr("userId", userId)
+			.sessionAttr("username", username))
+			// .andDo(print())
+			.andExpect(status().isOk());
+	}
+
+	@Test
+	public void postSaveIngredientTest() throws Exception {
+
+		mockMvc.perform(post("/list/" + userId + "/myrecipes")
+			// .param("userId", userId)
+			// .param("saveIngredients", "true")
+			.param("recipeIndex", "0")
+			.param("username", username)
 			.sessionAttr("userId", userId)
 			.sessionAttr("username", username))
 			// .andDo(print())
