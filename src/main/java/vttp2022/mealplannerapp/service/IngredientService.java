@@ -45,7 +45,7 @@ public class IngredientService {
         int added = 0;
 
         try {
-            if (!ingredientRepo.sqlGetIngredientList(recipeId).isEmpty()){
+            if (!ingredientRepo.sqlGetIngredientList(userId, recipeId).isEmpty()){
                 throw new Exception("Ingredients has already been saved.");
             }
         } catch (Exception e) {
@@ -67,8 +67,13 @@ public class IngredientService {
             e.printStackTrace();
             throw e;
         }
-
+        logger.log(Level.INFO, "Ingredients saved successfully.");
         return true;
+    }
+
+    public boolean deleteIngredients (String userId, int recipeId){
+        int deleted = ingredientRepo.sqlDeleteIngredients(userId, recipeId);
+        return deleted > 0;
     }
 
     

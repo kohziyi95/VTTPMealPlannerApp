@@ -77,10 +77,7 @@ class RecipeControllerTests {
 
 	@Test
 	public void postSearchRecipeTestPass() throws Exception {
-		// String query = "chicken";
-		// String cuisineType = "";
-		// String mealType = "dinner";
-		// String url = recipeSvc.getUrlStringByQuery(query, cuisineType, mealType);
+
 
 		mockMvc.perform(post("/recipe/search")
 			.param("query", "chicken")
@@ -95,13 +92,6 @@ class RecipeControllerTests {
 
 	@Test
 	public void getRecipeDetails() throws Exception {
-		// String query = "chicken";
-		// String cuisineType = "";
-		// String mealType = "dinner";
-		// String url = recipeSvc.getUrlStringByQuery(query, cuisineType, mealType);
-		// List<Recipe> recipeList = recipeSvc.searchRecipes(url);
-		// int recipeIndex = 1;
-		
 
 		mockMvc.perform(get("/recipe/search/details")
 			.param("recipeIndex", String.valueOf(recipeIndex))
@@ -114,17 +104,7 @@ class RecipeControllerTests {
 	@Test
 	public void postRecipeDetailsPass() throws Exception {
 
-		
-		// String query = "chicken";
-		// String cuisineType = "";
-		// String mealType = "dinner";
-		// String url = recipeSvc.getUrlStringByQuery(query, cuisineType, mealType);
-		// List<Recipe> recipeList = recipeSvc.searchRecipes(url);
 		String username = "postRecipeTest1";
-
-		// if (jdbcTemplate.queryForObject("select count(*) from user where username = 'postRecipeTest1'",Integer.class) > 0){
-		// 	jdbcTemplate.update("delete from user where username = 'postRecipeTest1'");
-		// };
 
 		loginSvc.createUser(username, "12345678", "postRecipeTest1@test.com");
 		String userId = loginSvc.authenticateUser(username, "12345678");
@@ -145,17 +125,7 @@ class RecipeControllerTests {
 	@Test
 	public void postRecipeDetailsFail() throws Exception {
 
-		
-		// String query = "chicken";
-		// String cuisineType = "";
-		// String mealType = "dinner";
-		// String url = recipeSvc.getUrlStringByQuery(query, cuisineType, mealType);
-		// List<Recipe> recipeList = recipeSvc.searchRecipes(url);
 		String username = "postRecipeTest2";
-
-		// if (jdbcTemplate.queryForObject("select count(*) from user where username = 'postRecipeTest2'",Integer.class) > 0){
-		// 	jdbcTemplate.update("delete from user where username = 'postRecipeTest2'");
-		// };
 
 		loginSvc.createUser(username, "12345678", "postRecipeTest2@test.com");
 		String userId = loginSvc.authenticateUser(username, "12345678");

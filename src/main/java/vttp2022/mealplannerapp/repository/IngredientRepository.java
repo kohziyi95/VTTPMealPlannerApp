@@ -25,10 +25,10 @@ public class IngredientRepository {
         "insert into ingredient_list (ingredient_id, user_id, item_name, quantity, measure, img_url, recipe_id) values (? , ?, ? , ? , ? , ? ,?)";
 
     private final String SQL_SELECT_INGREDIENT = 
-        "select * from ingredient_list where recipe_id = ?";
+        "select * from ingredient_list where user_id = ? and recipe_id = ?";
 
-    private final String SQL_DELETE_INGREDIENT_BY_ID = 
-        "delete from ingredient_list where ingredient_id = ?";
+    private final String SQL_DELETE_INGREDIENTS_BY_RECIPE_AND_USER =
+        "delete from ingredient_list where recipe_id = ? and user_id = ?";
 
     public int sqlInsertIngredients(String ingredientId, String userId, String itemName, 
                 float quantity, String measure, String imgUrl, int recipeId){
@@ -36,8 +36,8 @@ public class IngredientRepository {
         return added;
     }
 
-    public List<Ingredient> sqlGetIngredientList(int recipeId){
-        SqlRowSet rs = jdbcTemplate.queryForRowSet(SQL_SELECT_INGREDIENT, recipeId);
+    public List<Ingredient> sqlGetIngredientList(String userId, int recipeId){
+        SqlRowSet rs = jdbcTemplate.queryForRowSet(SQL_SELECT_INGREDIENT, userId, recipeId);
         List<Ingredient> ingredientList = new ArrayList<>();
         while (rs.next()){
             Ingredient i = new Ingredient();
@@ -50,15 +50,16 @@ public class IngredientRepository {
                 i.setMeasure(null);
             }
             i.setImgUrl(rs.getString("img_url"));
-            i.setRecipeId(recipeId);
+            i.setRecipeId(rs.getInt("recipe_id"));
             ingredientList.add(i);
         }
         return ingredientList;
     }
 
-    public int sqlDeleteIngredients(String ingredientId){
-        int deleted = jdbcTemplate.update(SQL_DELETE_INGREDIENT_BY_ID, ingredientId);
+    public int sqlDeleteIngredients(String userId, int recipeId){
+        int deleted = jdbcTemplate.update(SQL_DELETE_INGREDIENTS_BY_RECIPE_AND_USER, recipeId, userId);
         return deleted;
-    }
+    } 
+
 
 }

@@ -3,12 +3,12 @@ package vttp2022.mealplannerapp;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,7 +21,7 @@ import vttp2022.mealplannerapp.service.LoginService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class LoginControllerTests {
 
 	@Autowired
@@ -36,7 +36,7 @@ class LoginControllerTests {
 	@Autowired 
 	private LoginService loginSvc;
 
-	@BeforeEach
+	@BeforeAll
 	void init(){
 		try {
 			loginSvc.createUser("loginTest1", "12345678", "loginTest@test.com");
@@ -61,8 +61,6 @@ class LoginControllerTests {
 	public void postLoginTestPass() throws Exception {
 		String username = "loginTest1";
 		String password = "12345678";
-
-		// Mockito.when(loginSvc.authenticateUser(username, password)).thenReturn("4b19d09b");
 		
 		mockMvc.perform(post("/user/login")
 			.contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
@@ -77,8 +75,6 @@ class LoginControllerTests {
 		String username = "userTest1";
 		String password = "password1";
 
-		// Mockito.when(loginSvc.authenticateUser(username, password)).thenReturn(null);
-
 		mockMvc.perform(post("/user/login")
 			.contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 			.param("username", username)
@@ -89,10 +85,8 @@ class LoginControllerTests {
 
 	@Test
 	public void postLoginTestFailPassword() throws Exception {
-		String username = "test1";
+		String username = "loginTest1";
 		String password = "password1";
-
-		// Mockito.when(loginSvc.authenticateUser(username, password)).thenReturn(null);
 
 		mockMvc.perform(post("/user/login")
 			.contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
@@ -148,9 +142,11 @@ class LoginControllerTests {
 			.andExpect(status().isBadRequest());
 	}
 
-	@AfterEach
+	@AfterAll
 	void destroy(){
 		jdbcTemplate.update("delete from user where username = 'loginTest1'");
+		jdbcTemplate.update("delete from user where username = 'registerTest1'");
+
 	}
 
 
