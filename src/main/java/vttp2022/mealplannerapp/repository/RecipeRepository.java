@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.SerializationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
@@ -82,8 +83,11 @@ public class RecipeRepository {
         Recipe recipe = new Recipe();
         try {
             recipe = (Recipe)redisTemplate.opsForHash().get(userId + "_Map", String.valueOf(recipeId));
-        } catch (Exception e) {
+        } catch (NullPointerException e) {
             throw new Exception("No recipes found");
+        } catch (SerializationException e1) {
+            e1.printStackTrace();
+            return null;
         }
         return recipe;
     }
