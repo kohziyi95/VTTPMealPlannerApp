@@ -15,8 +15,8 @@
               <li class="nav-item m-auto" th:if="${user}">
                 <a class="nav-link" th:href="@{/list/{userId}/myrecipes(userId = ${userId})}">MyRecipes</a>
               </li>
-              <!-- <li class="nav-item m-auto" th:if="${user}">
-                <a class="nav-link" th:href="@{/list/{userId}/shoppinglist(userId = ${userId})}">Shopping List</a> -->
+              <li class="nav-item m-auto" th:if="${user}">
+                <a class="nav-link" th:href="@{/ingredient/{userId}(userId = ${userId})}">Saved Ingredients</a>
               </li>
               <li class="nav-item m-auto" th:if="${user}">
                 <a class="nav-link active" aria-current="page" href="/user/logout">Logout</a>

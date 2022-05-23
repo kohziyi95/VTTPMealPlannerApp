@@ -150,20 +150,20 @@ public class RecipeController {
                 mvc.addObject("message", "Recipe has already been saved.");
                 mvc.setStatus(HttpStatus.BAD_REQUEST);
             };
-        // }
-        } else if (payload.containsKey("saveIngredients")){
-            // saveIngredients = Boolean.valueOf(payload.getFirst("saveIngredients"));
-            try {
-                if (ingredientSvc.saveIngredients(recipe, userId)){
-                    mvc.addObject("message", "Ingredients Saved.");
-                }
-            } catch (Exception e1) {
-                logger.log(Level.WARNING, e1.getMessage());
-                e1.printStackTrace();
-                mvc.addObject("message", e1.getMessage());
-                mvc.setStatus(HttpStatus.BAD_REQUEST);
-            }
         }
+        // } else if (payload.containsKey("saveIngredients")){
+        //     // saveIngredients = Boolean.valueOf(payload.getFirst("saveIngredients"));
+        //     try {
+        //         if (ingredientSvc.saveIngredients(recipe, userId)){
+        //             mvc.addObject("message", "Ingredients Saved.");
+        //         }
+        //     } catch (Exception e1) {
+        //         logger.log(Level.WARNING, e1.getMessage());
+        //         e1.printStackTrace();
+        //         mvc.addObject("message", e1.getMessage());
+        //         mvc.setStatus(HttpStatus.BAD_REQUEST);
+        //     }
+        // }
 
         mvc.addObject("recipeIndex", recipeIndex);
         mvc.addObject("recipe", recipe);

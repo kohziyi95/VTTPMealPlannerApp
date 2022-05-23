@@ -9,6 +9,11 @@
     <div class="display-4 text-center mt-5 recipeName" th:unless="${savedRecipes}">No Recipes Saved</div>
     <div class="display-4 text-center mt-5 recipeName" th:if="${savedRecipes}">My Favourite Recipes</div>
 
+
+    <div class="mt-5">
+        <div class="h3 text-center" th:text="${message}"></div>
+    </div>
+
     <div class="card m-5" th:each="recipe : ${savedRecipes}">
         <div class="row m-3 p-3 justify-content-center" >
        
@@ -34,13 +39,21 @@
         </div>
         <div class="row mb-3">
             <div class="col text-center" >
-                <form th:action="@{/list/userId/delete}" method="POST">
+                <form th:action="@{/list/{userId}/myrecipes(userId = ${userId})}" method="POST">
+                    <button class="btn btn-warning" type="submit" name="saveIngredients" value=true>Save Ingredients</button>
+                    <input type="hidden" name="recipeId" th:value="${recipe.Id}">
+                    <input type="hidden" name="username" th:value="${user}">
+                    <input type="hidden" name="recipeIndex" th:value="${recipeStat.index}">
+
+                </form>
+                <form th:action="@{/list/{userId}/delete(userId = ${userId})}" method="POST">
                     <button class="btn btn-danger" type="submit">Delete</button>
                     <input type="hidden" name="recipeId" th:value="${recipe.Id}">
                     <input type="hidden" name="username" th:value="${user}">
 
                 </form>
             </div>
+           
         </div>
     </div>
    

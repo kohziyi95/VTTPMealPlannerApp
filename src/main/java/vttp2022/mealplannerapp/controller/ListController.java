@@ -2,6 +2,7 @@ package vttp2022.mealplannerapp.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpSession;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import vttp2022.mealplannerapp.model.Recipe;
+import vttp2022.mealplannerapp.service.IngredientService;
 import vttp2022.mealplannerapp.service.RecipeService;
 
 @Controller
@@ -26,6 +28,9 @@ public class ListController {
 
     @Autowired
     private RecipeService svc;
+
+    @Autowired
+    private IngredientService ingredientSvc;
 
     @GetMapping(path = "/{userId}/myrecipes")
     public ModelAndView getMyRecipes (
@@ -44,6 +49,45 @@ public class ListController {
             savedRecipes = svc.getSavedRecipes(userId);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+        mvc.addObject("savedRecipes", savedRecipes);
+        mvc.addObject("user", sess.getAttribute("username"));
+        mvc.addObject("userId", userId);
+        return mvc;
+    }
+
+    @PostMapping(path = "/{userId}/myrecipes")
+    public ModelAndView saveIngredients (
+            @PathVariable String userId,
+            @RequestParam boolean saveIngredients,
+            @RequestParam String username,
+            @RequestParam int recipeIndex,
+            HttpSession sess) {
+        
+        if (!userId.equals((String)sess.getAttribute("userId"))){
+            ModelAndView mvc = new ModelAndView("index", HttpStatus.FORBIDDEN);
+            return mvc;
+        }
+
+        List<Recipe> savedRecipes = new ArrayList<>();
+        try {
+            savedRecipes = svc.getSavedRecipes(userId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Recipe recipe = savedRecipes.get(recipeIndex);
+
+        ModelAndView mvc = new ModelAndView("savedRecipes");
+        try {
+            if (ingredientSvc.saveIngredients(recipe, userId)){
+                mvc.addObject("message", "Ingredients Saved.");
+            }
+        } catch (Exception e1) {
+            logger.log(Level.WARNING, e1.getMessage());
+            e1.printStackTrace();
+            mvc.addObject("message", e1.getMessage());
+            mvc.setStatus(HttpStatus.BAD_REQUEST);
         }
 
         mvc.addObject("savedRecipes", savedRecipes);

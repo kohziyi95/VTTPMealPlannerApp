@@ -16,71 +16,83 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import vttp2022.mealplannerapp.model.Ingredient;
 import vttp2022.mealplannerapp.model.Recipe;
+import vttp2022.mealplannerapp.service.IngredientService;
 import vttp2022.mealplannerapp.service.RecipeService;
 
 @Controller
-@RequestMapping(path = "/list")
+@RequestMapping(path = "/ingredient")
 public class IngredientController {
     private Logger logger = Logger.getLogger(IngredientController.class.getName());
 
     @Autowired
-    private RecipeService svc;
+    private IngredientService svc;
 
-    // @GetMapping(path = "/{userId}/myrecipes")
-    // public ModelAndView getMyRecipes (
-    //         @PathVariable String userId,
-    //         HttpSession sess) {
+    @Autowired
+    private RecipeService recipeSvc;
+
+    @GetMapping(path = "/{userId}")
+    public ModelAndView getSavedIngredients (
+            @PathVariable String userId,
+            HttpSession sess) {
         
-    //     if (!userId.equals((String)sess.getAttribute("userId"))){
-    //         ModelAndView mvc = new ModelAndView("index", HttpStatus.FORBIDDEN);
-    //         return mvc;
-    //     }
+        if (!userId.equals((String)sess.getAttribute("userId"))){
+            ModelAndView mvc = new ModelAndView("index", HttpStatus.FORBIDDEN);
+            return mvc;
+        }
 
-    //     ModelAndView mvc = new ModelAndView("savedRecipes");
+        ModelAndView mvc = new ModelAndView("savedIngredients");
+        mvc.addObject("user", sess.getAttribute("username"));
+        mvc.addObject("userId", userId);
 
-    //     List<Recipe> savedRecipes = new ArrayList<>();
-    //     try {
-    //         savedRecipes = svc.getSavedRecipes(userId);
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //     }
+        List<Ingredient> savedIngredients = new ArrayList<>();
+        List<Recipe> recipeList = new ArrayList<>();
 
-    //     mvc.addObject("savedRecipes", savedRecipes);
-    //     mvc.addObject("user", sess.getAttribute("username"));
-    //     mvc.addObject("userId", userId);
-    //     return mvc;
-    // }
+        try {
+            savedIngredients = svc.getAllIngredients(userId);
+            recipeList = recipeSvc.getSavedRecipes(userId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            mvc.addObject("message", e.getMessage());
+            return mvc;
+        }
+        mvc.addObject("recipeList", recipeList);
+        mvc.addObject("savedIngredients", savedIngredients);
+        return mvc;
+    }
     
-    // @PostMapping(path = "/{userId}/delete")
-    // public ModelAndView postDeleteRecipe (
-    //     @RequestParam int recipeId, 
-    //     @RequestParam String username,
-    //     @PathVariable String userId, 
-    //     HttpSession sess) {
+    @PostMapping(path = "/{userId}/delete")
+    public ModelAndView postDeleteRecipe (
+        @RequestParam int recipeId, 
+        @RequestParam String username,
+        @PathVariable String userId, 
+        HttpSession sess) {
          
-    //     try {
-    //         svc.deleteSavedRecipes(recipeId, userId);
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //     }
+        try {
+            svc.deleteIngredients(userId, recipeId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-    //     ModelAndView mvc = new ModelAndView("savedRecipes");
+        sess.setAttribute("userId", userId);
+        sess.setAttribute("username", username);
 
-    //     List<Recipe> savedRecipes = new ArrayList<>();
-    //     try {
-    //         savedRecipes = svc.getSavedRecipes(userId);
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //     }
+        ModelAndView mvc = new ModelAndView("savedIngredients");
+        mvc.addObject("user", sess.getAttribute("username"));
+        mvc.addObject("userId", userId);
 
-    //     sess.setAttribute("userId", userId);
-    //     sess.setAttribute("username", username);
+        List<Ingredient> savedIngredients = new ArrayList<>();
+        try {
+            savedIngredients = svc.getAllIngredients(userId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            mvc.addObject("message", e.getMessage());
+            return mvc;
+        }
 
-    //     mvc.addObject("savedRecipes", savedRecipes);
-    //     mvc.addObject("user", sess.getAttribute("username"));
-    //     mvc.addObject("userId", userId);
-    //     return mvc;
-    // }
+        mvc.addObject("savedIngredients", savedIngredients);
+        return mvc;
+    }
 
 }

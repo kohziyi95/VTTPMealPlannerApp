@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://wwww.thymeleaf.org">
+<head th:replace="fragments/head :: head">
+</head>
+<body>
+    <div th:replace="fragments/header :: header"></div>
+
+    <!-- <div class="text-center mt-3"><img class="w-25 opacity-50" src="/images/swirldivider.png"></div> -->
+    <div class="display-4 text-center mt-5 ingredientName" th:unless="${savedIngredients}">No Ingredients Saved</div>
+    <div class="display-4 text-center mt-5 ingredientName" th:if="${savedIngredients}">Ingredients Saved</div>
+
+    <div class="card m-5" >
+        <div class="row m-3 p-3 justify-content-center" th:each="recipe : ${recipeList}">
+       
+            <div class="col-7 m-2">
+                <div class="display-5 text-danger text-capitalize ingredientName">
+                    <span th:text="${recipeStat.index + 1} + ."></span>
+                    <span th:text="${recipe.recipeName}"></span>
+                </div>
+            </div>
+
+            <div class="col text-center" >
+                <form th:action="@{/ingredient/{userId}/delete(userId = ${userId})}" method="POST">
+                    <button class="btn btn-danger" type="submit">Delete</button>
+                    <input type="hidden" name="recipeId" th:value="${recipe.id}">
+                    <input type="hidden" name="username" th:value="${user}">
+    
+                </form>
+            </div>
+
+        </div>
+        
+    </div>
+
+
+    <div class="card m-5" th:each="ingredient : ${savedIngredients}">
+        <div class="row m-3 p-3 justify-content-center" >
+       
+            <div class="col-7 m-2">
+                <div class="display-5 text-danger text-capitalize ingredientName">
+                    <span th:text="${ingredientStat.index + 1} + ."></span>
+                    <span th:text="${ingredient.itemName}"></span>
+          
+                </div>
+                <div>
+                    <div><strong>Quantity:</strong></div>
+                    <div th:text="${ingredient.quantity}"></div>
+                </div>
+                <div>
+                    <div><strong>Measure:</strong></div>
+                    <div th:text="${ingredient.measure}"></div>
+                </div>
+                <div>
+                    <div><strong>RecipeId:</strong></div>
+                    <div th:text="${ingredient.recipeId}"></div>
+                </div>
+            </div>
+            <div class="col-4 col-sm-auto m-2">
+                <div class="m-auto"><img th:src="${ingredient.imgUrl}"></div>
+                
+            </div>
+        </div>
+        
+    </div>
+
+</body>
+</html>

@@ -76,6 +76,19 @@ public class IngredientService {
         return deleted > 0;
     }
 
+    public List<Ingredient> getIngredients(String userId, int recipeId) throws Exception{
+        List<Ingredient> ingredientList = ingredientRepo.sqlGetIngredientList(userId, recipeId);
+        if (ingredientList.isEmpty()) throw new Exception("Ingredient List Not Found.");
+        return ingredientList;
+    }
+
+    public List<Ingredient> getAllIngredients(String userId) throws Exception{
+        List<Ingredient> ingredientList = ingredientRepo.sqlGetAllIngredients(userId);
+        if (ingredientList.isEmpty()) throw new Exception("Ingredient List Not Found.");
+        return ingredientList;
+
+    }
+
     
 
     

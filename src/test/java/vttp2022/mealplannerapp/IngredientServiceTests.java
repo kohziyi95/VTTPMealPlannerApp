@@ -68,8 +68,7 @@ class IngredientServiceTests {
 	@Test
 	void saveIngredientsTestReturnTrue() throws Exception{
 		logger.log(Level.INFO, "Recipe ID >>>>> " + recipeId);
-
-		ingredientList = ingredientRepo.sqlGetIngredientList("iTest001", recipe.getId());
+		ingredientList = ingredientSvc.getIngredients("iTest001", recipe.getId());
 		logger.log(Level.INFO, ingredientList.toString());
 		assertTrue(ingredientSaved && !ingredientList.isEmpty());
 	}
@@ -86,9 +85,13 @@ class IngredientServiceTests {
 		ingredientSvc.saveIngredients(recipe, "iTest002");
 
 		boolean deleted = ingredientSvc.deleteIngredients("iTest002", recipeId);
-		ingredientList = ingredientRepo.sqlGetIngredientList("iTest002", recipe.getId());
-		logger.log(Level.INFO, ingredientList.toString());
-		assertTrue(deleted && ingredientList.isEmpty());
+		
+		// logger.log(Level.INFO, ingredientList.toString());\
+		assertAll(
+			() -> assertTrue(deleted),
+			() -> assertThrows(Exception.class, ()-> ingredientSvc.getIngredients("iTest002", recipe.getId()) )
+		);
+		
 	}
 	
 

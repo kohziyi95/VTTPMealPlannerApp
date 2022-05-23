@@ -27,8 +27,11 @@ public class IngredientRepository {
     private final String SQL_SELECT_INGREDIENT = 
         "select * from ingredient_list where user_id = ? and recipe_id = ?";
 
+    private final String SQL_SELECT_ALL_INGREDIENTS_BY_USER = 
+        "select * from ingredient_list where user_id = ? order by item_name";
+
     private final String SQL_DELETE_INGREDIENTS_BY_RECIPE_AND_USER =
-        "delete from ingredient_list where recipe_id = ? and user_id = ?";
+        "delete from ingredient_list where user_id = ? and recipe_id = ?";
 
     public int sqlInsertIngredients(String ingredientId, String userId, String itemName, 
                 float quantity, String measure, String imgUrl, int recipeId){
@@ -56,8 +59,28 @@ public class IngredientRepository {
         return ingredientList;
     }
 
+    public List<Ingredient> sqlGetAllIngredients(String userId){
+        SqlRowSet rs = jdbcTemplate.queryForRowSet(SQL_SELECT_ALL_INGREDIENTS_BY_USER, userId);
+        List<Ingredient> ingredientList = new ArrayList<>();
+        while (rs.next()){
+            Ingredient i = new Ingredient();
+            i.setIngredientId(rs.getString("ingredient_id"));
+            i.setItemName(rs.getString("item_name"));
+            i.setQuantity(rs.getFloat("quantity"));
+            try {
+                i.setMeasure(rs.getString("measure"));
+            } catch (Exception e) {
+                i.setMeasure(null);
+            }
+            i.setImgUrl(rs.getString("img_url"));
+            i.setRecipeId(rs.getInt("recipe_id"));
+            ingredientList.add(i);
+        }
+        return ingredientList;
+    }
+
     public int sqlDeleteIngredients(String userId, int recipeId){
-        int deleted = jdbcTemplate.update(SQL_DELETE_INGREDIENTS_BY_RECIPE_AND_USER, recipeId, userId);
+        int deleted = jdbcTemplate.update(SQL_DELETE_INGREDIENTS_BY_RECIPE_AND_USER, userId, recipeId);
         return deleted;
     } 
 
