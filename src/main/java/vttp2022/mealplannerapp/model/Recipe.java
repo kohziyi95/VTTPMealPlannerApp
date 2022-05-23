@@ -1,6 +1,7 @@
 package vttp2022.mealplannerapp.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -90,5 +91,24 @@ public class Recipe implements Serializable {
         return recipe;
     }
 
+    public Recipe createTestRecipe(int recipeId){
+        Recipe r = new Recipe();
+        List<String> ingredientLines = new ArrayList<>();
+        ingredientLines.add("test");
+        List<String> cuisineType = List.copyOf(ingredientLines);
+        List<String> mealType = List.copyOf(ingredientLines);
+        List<Ingredient> ingredientList = new ArrayList<>();
+        ingredientList.add(Ingredient.createTestIngredient(recipeId));
+
+        r.setCuisineType(cuisineType);
+        r.setId(recipeId);
+        r.setImgUrl("testUrl");
+        r.setIngredientLines(ingredientLines);
+        r.setIngredientList(ingredientList);
+        r.setMealType(mealType);
+        r.setRecipeName("testRecipeName");
+
+        return r;
+    }
     
 }

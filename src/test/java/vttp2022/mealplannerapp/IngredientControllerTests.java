@@ -19,16 +19,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.web.servlet.MockMvc;
 
+import vttp2022.mealplannerapp.controller.IngredientController;
 import vttp2022.mealplannerapp.controller.ListController;
 import vttp2022.mealplannerapp.model.Recipe;
+import vttp2022.mealplannerapp.service.IngredientService;
 import vttp2022.mealplannerapp.service.LoginService;
 import vttp2022.mealplannerapp.service.RecipeService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 
-class ListControllerTests {
-	private Logger logger = Logger.getLogger(ListControllerTests.class.getName());
+class IngredientControllerTests {
+	private Logger logger = Logger.getLogger(IngredientControllerTests.class.getName());
 
 
 	@Autowired
@@ -38,13 +40,15 @@ class ListControllerTests {
 	private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private ListController controller;
+    private IngredientController controller;
 
 	@Autowired
 	private RecipeService recipeSvc;
 
 	@Autowired
-	private LoginService loginSvc;
+	private IngredientService ingredientSvc;
+
+	@Autowired LoginService loginSvc;
 
 	private String username = null;
 	private String userId = null;
@@ -59,8 +63,9 @@ class ListControllerTests {
 		// String mealType = "dinner";
 		// String url = recipeSvc.getUrlStringByQuery(query, cuisineType, mealType);
 		// List<Recipe> recipeList = recipeSvc.searchRecipes(url);
-		username = "myRecipeTest1";
-		loginSvc.createUser(username, "12345678", "myRecipeTest1@test.com");
+
+		username = "ingredientTest1";
+		loginSvc.createUser(username, "12345678", "ingredientTest1@test.com");
 		userId = loginSvc.authenticateUser(username, "12345678");
 		// int recipeIndex = 5;
 		// recipe = recipeList.get(recipeIndex);
@@ -76,11 +81,9 @@ class ListControllerTests {
     }
 
 	@Test
-	public void getMyRecipeTest() throws Exception {
+	public void getSavedIngredientsTest() throws Exception {
 
-
-		mockMvc.perform(get("/list/" + userId + "/myrecipes")
-			// .param("userId", userId)
+		mockMvc.perform(get("/ingredient/" + userId )
 			.sessionAttr("userId", userId)
 			.sessionAttr("username", username))
 			// .andDo(print())
@@ -88,8 +91,8 @@ class ListControllerTests {
 	}
 
 	@Test
-	public void postDeleteRecipeTest() throws Exception {
-		mockMvc.perform(post("/list/" + userId + "/delete")
+	public void postDeleteIngredientTest() throws Exception {
+		mockMvc.perform(post("/ingredient/" + userId + "/delete")
 			.param("recipeId", String.valueOf(recipeId))
 			.param("username", username)
 			.sessionAttr("userId", userId)
@@ -100,7 +103,7 @@ class ListControllerTests {
 
 	@AfterEach
 	void destroy() throws Exception {
-		jdbcTemplate.update("delete from user where username = 'myRecipeTest1'");
+		jdbcTemplate.update("delete from user where username = 'ingredientTest1'");
 		recipeSvc.redisDeleteAllFromUser(userId);
 		recipeSvc.deleteSavedRecipes(recipeId, userId);
 	}

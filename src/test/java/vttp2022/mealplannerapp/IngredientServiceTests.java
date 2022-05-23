@@ -1,10 +1,8 @@
 package vttp2022.mealplannerapp;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,12 +10,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -93,11 +88,26 @@ class IngredientServiceTests {
 		);
 		
 	}
+
+	@Test
+	void getAllIngredients() throws Exception{
+		for (int i = 0; i < 3; i++) {
+			recipe = recipeList.get(i);
+			// ingredientList = recipe.getIngredientList();
+			recipe.setId(i);
+			ingredientSaved = ingredientSvc.saveIngredients(recipe, "iTest003");
+		}
+		List<Ingredient> list = ingredientSvc.getAllIngredients("iTest003");
+		assertTrue(list.size() >= 3);
+	}
 	
 
 	@AfterAll
 	void destroy(){
 		jdbcTemplate.update("delete from ingredient_list where user_id = 'iTest001'");
+		for (int i = 0; i < 3; i++) {
+			ingredientSvc.deleteIngredients("iTest003", i);
+		}
 	}
 
 }

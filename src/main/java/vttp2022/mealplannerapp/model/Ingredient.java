@@ -81,4 +81,14 @@ public class Ingredient implements Serializable {
         return list;
     }
     
+    public static Ingredient createTestIngredient(int recipeId){
+         Ingredient i = new Ingredient();
+         i.setImgUrl("testImgUrl");
+         i.setIngredientId("testId");
+         i.setItemName("testName");
+         i.setMeasure("testMeasure");
+         i.setQuantity(2F);
+         i.setRecipeId(recipeId);
+        return i;
+    }
 }

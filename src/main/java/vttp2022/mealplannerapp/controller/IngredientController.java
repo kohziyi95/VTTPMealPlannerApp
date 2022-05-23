@@ -53,7 +53,7 @@ public class IngredientController {
             savedIngredients = svc.getAllIngredients(userId);
             recipeList = recipeSvc.getSavedRecipes(userId);
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
             mvc.addObject("message", e.getMessage());
             return mvc;
         }
@@ -86,7 +86,7 @@ public class IngredientController {
         try {
             savedIngredients = svc.getAllIngredients(userId);
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
             mvc.addObject("message", e.getMessage());
             return mvc;
         }
