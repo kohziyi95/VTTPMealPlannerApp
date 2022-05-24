@@ -105,6 +105,8 @@ public class ListController {
          
         try {
             svc.deleteSavedRecipes(recipeId, userId);
+            ingredientSvc.deleteIngredients(userId, recipeId);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
