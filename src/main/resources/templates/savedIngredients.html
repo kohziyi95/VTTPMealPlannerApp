@@ -6,35 +6,50 @@
     <div th:replace="fragments/header :: header"></div>
 
     <!-- <div class="text-center mt-3"><img class="w-25 opacity-50" src="/images/swirldivider.png"></div> -->
-    <div class="display-4 text-center mt-5 ingredientName" th:unless="${savedIngredients}">No Ingredients Saved</div>
-    <div class="display-4 text-center mt-5 ingredientName" th:if="${savedIngredients}">Ingredients Saved</div>
+    <div class="display-4 text-center mt-5 recipeName" th:unless="${savedIngredients}">No Ingredients Saved</div>
+    <div class="display-4 text-center mt-5 recipeName" th:if="${savedIngredients}">My Ingredients</div>
 
-    <div class="card m-5" >
-        <div class="row m-3 p-3 justify-content-center" th:each="recipe : ${recipeList}">
-       
-            <div class="col-7 m-2">
-                <div class="display-5 text-danger text-capitalize ingredientName">
-                    <span th:text="${recipeStat.index + 1} + ."></span>
-                    <span th:text="${recipe.recipeName}"></span>
-                </div>
+    <div class=" m-5" >
+        <div class="row ms-3 p-3 h2 text-danger ">Recipes Saved:</div>
+        <div class="row justify-content-center" >
+            <div class="col">
+                <table class="table table-danger table-bordered w-100 border-dark" >
+                    <thead >
+                        <tr class="text-center">
+                            <th scope="col">#</th>
+                            <th scope="col">Recipe Name</th>
+                            <th scope="col">Delete?</th>
+                        </tr>
+                    </thead>
+                    <tbody th:each="recipe : ${recipeList}">
+                        <tr class="text-center">
+                            <td >
+                                <span th:text="${recipeStat.index + 1} + ."></span>
+                            </td>
+                            <td >
+                                <span th:text="${recipe.recipeName}"></span>
+                            </td>
+                            <td>
+                                <form th:action="@{/ingredient/{userId}/delete(userId = ${userId})}" method="POST">
+                                <button class="btn btn-danger" type="submit">Delete</button>
+                                <input type="hidden" name="recipeId" th:value="${recipe.id}">
+                                <input type="hidden" name="username" th:value="${user}">
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
-            <div class="col text-center" >
-                <form th:action="@{/ingredient/{userId}/delete(userId = ${userId})}" method="POST">
-                    <button class="btn btn-danger" type="submit">Delete</button>
-                    <input type="hidden" name="recipeId" th:value="${recipe.id}">
-                    <input type="hidden" name="username" th:value="${user}">
-    
-                </form>
-            </div>
         </div>
     </div>
 
 
-    <div class="card m-5" th:each="ingredient : ${savedIngredients}">
-        <div class="row m-3 p-3 justify-content-center" >
-       
-            <div class="col-7 m-2">
+    <div class="m-5 mt-3" >
+        <div class="row justify-content-center" >
+            <div class="row ms-3 p-3 h2 text-danger ">Ingredients Saved:</div>
+
+            <!-- <div class="col-7 m-2">
                 <div class="display-5 text-danger text-capitalize ingredientName">
                     <span th:text="${ingredientStat.index + 1} + ."></span>
                     <span th:text="${ingredient.itemName}"></span>
@@ -56,7 +71,40 @@
             <div class="col-4 col-sm-auto m-2">
                 <div class="m-auto"><img th:src="${ingredient.imgUrl}"></div>
                 
+            </div> -->
+            <div class="col">
+                <table class="table table-warning table-bordered w-100 border-dark" >
+                    <thead class="table-danger table-bordered border-dark">
+                        <tr class="text-center">
+                            <th scope="col">#</th>
+                            <th scope="col">Recipe Name</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Measure</th>
+                            <th scope="col">Recipe Id</th>
+                        </tr>
+                    </thead>
+                    <tbody th:each="ingredient : ${savedIngredients}">
+                        <tr class="text-center text-capitalize">
+                            <td >
+                                <span th:text="${ingredientStat.index + 1} + ."></span>
+                            </td>
+                            <td >
+                                <span th:text="${ingredient.itemName}"></span>
+                            </td>
+                            <td>
+                                <span th:text="${ingredient.quantity}"></span>
+                            </td>
+                            <td>
+                                <span th:text="${ingredient.measure}"></span>
+                            </td>
+                            <td>
+                                <span th:text="${ingredient.recipeId}"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
+
         </div>
         
     </div>

@@ -11,6 +11,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
 import vttp2022.mealplannerapp.model.Ingredient;
+import vttp2022.mealplannerapp.model.Recipe;
 
 
 @Repository
@@ -32,6 +33,9 @@ public class IngredientRepository {
 
     private final String SQL_DELETE_INGREDIENTS_BY_RECIPE_AND_USER =
         "delete from ingredient_list where user_id = ? and recipe_id = ?";
+
+    private final String SQL_SELECT_RECIPE_BY_INGREDIENTS = 
+        "select * from ingredient_list join recipes on ingredient_list.recipe_id = recipes.id where ingredient_list.user_id = ?";
 
     public int sqlInsertIngredients(String ingredientId, String userId, String itemName, 
                 float quantity, String measure, String imgUrl, int recipeId){
@@ -84,5 +88,15 @@ public class IngredientRepository {
         return deleted;
     } 
 
-
+    public List<Recipe> sqlGetRecipesFromSavedIngredients(String userId){
+        SqlRowSet rs = jdbcTemplate.queryForRowSet(SQL_SELECT_RECIPE_BY_INGREDIENTS, userId);
+        List<Recipe> recipeList = new ArrayList<>();
+        while (rs.next()){
+            Recipe i = new Recipe();
+            i.setRecipeName(rs.getString("recipe_name"));
+            i.setId(rs.getInt("recipe_id"));
+            recipeList.add(i);
+        }
+        return recipeList;
+    }
 }

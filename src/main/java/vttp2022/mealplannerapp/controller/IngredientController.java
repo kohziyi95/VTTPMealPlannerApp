@@ -1,7 +1,9 @@
 package vttp2022.mealplannerapp.controller;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpSession;
@@ -47,16 +49,18 @@ public class IngredientController {
         mvc.addObject("userId", userId);
 
         List<Ingredient> savedIngredients = new ArrayList<>();
-        List<Recipe> recipeList = new ArrayList<>();
 
         try {
             savedIngredients = svc.getAllIngredients(userId);
-            recipeList = recipeSvc.getSavedRecipes(userId);
+            // recipeList = recipeSvc.getSavedRecipes(userId);
         } catch (Exception e) {
             // e.printStackTrace();
             mvc.addObject("message", e.getMessage());
             return mvc;
         }
+ 
+        List<Recipe> recipeList = svc.getRecipeNames(userId);
+
         mvc.addObject("recipeList", recipeList);
         mvc.addObject("savedIngredients", savedIngredients);
         return mvc;
@@ -90,6 +94,10 @@ public class IngredientController {
             mvc.addObject("message", e.getMessage());
             return mvc;
         }
+
+        List<Recipe> recipeList = svc.getRecipeNames(userId);
+
+        mvc.addObject("recipeList", recipeList);
 
         mvc.addObject("savedIngredients", savedIngredients);
         return mvc;

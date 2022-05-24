@@ -37,7 +37,6 @@ public class RecipeRepository {
     private final String SQL_DELETE_RECIPE =
         "delete from recipes where id = ?";
 
-
     public boolean sqlInsertRecipes(Recipe recipe, String userId){
         int added = jdbcTemplate.update(SQL_INSERT_RECIPE, recipe.getRecipeName(), userId);
         return added > 0;
